@@ -77,4 +77,11 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservationList = new ArrayList<>();
+
+    public void addReservation(Reservation reservation){
+        this.reservationList.add(reservation);
+    }
+    public void removeReservation(Reservation reservation){
+        this.reservationList.remove(reservation);
+    }
 }
