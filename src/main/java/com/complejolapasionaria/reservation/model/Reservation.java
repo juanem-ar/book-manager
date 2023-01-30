@@ -1,14 +1,18 @@
 package com.complejolapasionaria.reservation.model;
 
+import com.complejolapasionaria.reservation.Enum.EStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,4 +40,33 @@ public class Reservation  implements Serializable {
 
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @NotNull(message = "Amount of people is required")
+    @Column(name = "amount_of_people")
+    @Size(min = 1, max = 9)
+    private int amountOfPeople;
+
+    @NotNull(message = "Check-in date is required (YYYY-MM-dd).")
+    @Column(name = "check_in")
+    @JsonFormat(pattern = "YYYY-MM-dd")
+    private LocalDate checkIn;
+
+    @NotNull(message = "Check-out date is required (YYYY-MM-dd).")
+    @Column(name = "check_out")
+    @JsonFormat(pattern = "YYYY-MM-dd")
+    private LocalDate checkOut;
+
+    @NotNull(message = "Cost per night is required")
+    @Column(name = "cost_per_night")
+    private Double costPerNight;
+
+    @NotNull(message = "Partial payment is required")
+    @Column(name = "partial_payment")
+    private Double partialPayment;
+
+    private Double debit;
+
+    private Double totalAmount;
+
+    private EStatus status;
 }

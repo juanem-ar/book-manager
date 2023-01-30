@@ -49,7 +49,7 @@ public class User implements Serializable {
     @NotNull(message = "Password is required")
     private String password;
 
-    @NotNull(message = "Date of birth is required")
+    @NotNull(message = "Date of birth is required (YYYY-MM-dd).")
     @Column(name = "day_of_birth")
     @JsonFormat(pattern = "YYYY-MM-dd")
     private LocalDate dateOfBirth;
