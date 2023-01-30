@@ -68,5 +68,6 @@ public class Reservation  implements Serializable {
 
     private Double totalAmount;
 
+    @Enumerated(EnumType.STRING)
     private EStatus status;
 }
