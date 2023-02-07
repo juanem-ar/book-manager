@@ -34,7 +34,7 @@ public class CommerceBuilding implements Serializable {
     private String address;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @OneToMany(mappedBy = "building")
