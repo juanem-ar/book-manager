@@ -4,6 +4,7 @@ import com.complejolapasionaria.reservation.dto.AuthenticationRequestUserDto;
 import com.complejolapasionaria.reservation.dto.AuthenticationResponseDto;
 import com.complejolapasionaria.reservation.dto.RequestUserDto;
 import com.complejolapasionaria.reservation.dto.ResponseUserDto;
+import com.complejolapasionaria.reservation.exceptions.BadRequestException;
 import com.complejolapasionaria.reservation.mapper.UserMapper;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.IRoleRepository;
@@ -11,7 +12,6 @@ import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.security.config.PasswordEncoder;
 import com.complejolapasionaria.reservation.security.service.IAuthenticationService;
 import com.complejolapasionaria.reservation.service.IUserService;
-import jakarta.xml.bind.ValidationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -43,22 +43,19 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     }
 
     @Override
-    public AuthenticationResponseDto logIn(AuthenticationRequestUserDto dto) throws Exception {
+    public AuthenticationResponseDto logIn(AuthenticationRequestUserDto dto) throws BadRequestException {
         String username = dto.getEmail();
         String password = dto.getPassword();
         //TODO revisar validacion de email vacio
         if(!iUserRepository.existsByEmail(username)){
-            throw new ValidationException("There isn't an account with that email " + username);
+            throw new BadRequestException("There isn't an account with that email " + username);
         }
         if (!passwordEncoder.bCryptPasswordEncoder().matches(password,iUserRepository.findByEmail(username).getPassword())){
-            throw new ValidationException("Incorrect password");
+            throw new BadRequestException("Incorrect password");
         }
-        System.out.println("LLEGA ACA");
         final UserDetails userDetails = iUserService.loadUserByUsername(username);
         System.out.println( userDetails.toString());
-        System.out.println("DESP ACA");
         final String jwt = jwtUtils.generateToken(userDetails);
-        System.out.println("ULTIMO ACA");
         return new AuthenticationResponseDto(username,jwt);
     }
 }
