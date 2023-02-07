@@ -3,6 +3,7 @@ package com.complejolapasionaria.reservation.exceptions;
 import com.complejolapasionaria.reservation.exceptions.messageCostumerErrors.ErrorResponsesMessages;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,15 @@ public class GlobalExceptions {
         errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
         errorsResponseMessage.setMessage(Arrays.toString(ex.getDetailMessageArguments()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    @ResponseStatus(code = HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErrorResponsesMessages> processUsernameValidation(AccessDeniedException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.FORBIDDEN);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorsResponseMessage);
     }
 
     @ExceptionHandler({UsernameNotFoundException.class})
