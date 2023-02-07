@@ -42,4 +42,6 @@ public class RequestUserDto {
     @NotNull(message = "Phone number is required")
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    private String role;
 }

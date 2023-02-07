@@ -5,20 +5,20 @@ import com.complejolapasionaria.reservation.security.service.IJwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 public class JwtUtilsImpl implements IJwtUtils {
     private String SECRET_KEY = "secret";
-    private final IUserRepository userRepository;
+    private IUserRepository userRepository;
+    public JwtUtilsImpl(IUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public String extractUsername (String token){ return extractClaim(token, Claims::getSubject);}
@@ -46,8 +46,11 @@ public class JwtUtilsImpl implements IJwtUtils {
         return createToken(claims, userDetails.getUsername());
     }
     private String createToken(Map<String, Object> claims, String subject){
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ 100 * 60 * 60 * 10))//el ultimo numero tenia 10, le puse 100; calculo para q el token dure 10 horas.
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+ 100 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
     @Override
@@ -55,7 +58,6 @@ public class JwtUtilsImpl implements IJwtUtils {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
 
     @Override
     public Long extractUserId(String token) {

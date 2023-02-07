@@ -14,13 +14,13 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 public class AuthenticationRequestUserDto {
 
-    @NotNull
+    @NotNull(message = "Email is required")
     @Email
     @Size(min = 6)
     @Schema(format = "email", example = "juanem@hotmail.com", minLength = 6, description = "User email")
     private String email;
 
-    @NotNull
+    @NotNull(message = "Password is required")
     @Length(min = 8, max = 25)
     @Schema(required = true, example = "12345678", description = "Password", minLength = 8, maxLength = 25)
     private String password;

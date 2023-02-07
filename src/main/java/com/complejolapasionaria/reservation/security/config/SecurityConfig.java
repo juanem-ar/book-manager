@@ -3,7 +3,6 @@ package com.complejolapasionaria.reservation.security.config;
 import com.complejolapasionaria.reservation.security.filter.JwtRequestFilter;
 import com.complejolapasionaria.reservation.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +20,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
     private final UserServiceImpl userService;
     private final JwtRequestFilter jwtRequestFilter;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public SecurityConfig(UserServiceImpl userService, JwtRequestFilter jwtRequestFilter, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userService = userService;
+        this.jwtRequestFilter = jwtRequestFilter;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http ) throws Exception {
