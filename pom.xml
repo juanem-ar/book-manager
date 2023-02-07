@@ -60,7 +60,7 @@
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-core</artifactId>
 		</dependency>
-		<!--
+		<!-- MapStruct -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
@@ -70,7 +70,7 @@
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
 			<version>1.4.2.Final</version>
-		</dependency>MapStruct -->
+		</dependency>
 		<!-- Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

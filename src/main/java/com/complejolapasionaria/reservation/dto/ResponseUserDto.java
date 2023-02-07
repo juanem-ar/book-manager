@@ -22,5 +22,6 @@ public class ResponseUserDto {
     private Timestamp updateDate;
     private Role role;
     private List<Reservation> reservationList;
+    private String jwt;
 
 }

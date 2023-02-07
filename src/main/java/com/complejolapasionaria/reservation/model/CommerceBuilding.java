@@ -33,6 +33,10 @@ public class CommerceBuilding implements Serializable {
     @NotNull(message = "commerce building's address is required.")
     private String address;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User owner;
+
     @OneToMany(mappedBy = "building")
     private List<RentalUnit> rentalUnitList = new ArrayList<>();
 

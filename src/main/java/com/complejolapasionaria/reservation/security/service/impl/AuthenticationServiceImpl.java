@@ -39,22 +39,24 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             throw new UsernameNotFoundException("There is an account with that email address.");
         User entity = UserMapper.toEntity(dto);
         User entitySaved = iUserRepository.save(entity);
-        return UserMapper.toResponseUserDto(entitySaved);
+        ResponseUserDto response = UserMapper.toResponseUserDto(entitySaved);
+        AuthenticationRequestUserDto authRequest = new AuthenticationRequestUserDto(dto.getEmail(),dto.getPassword());
+        AuthenticationResponseDto authResponse = logIn(authRequest);
+        response.setJwt(authResponse.getJwt());
+        return response;
     }
 
     @Override
     public AuthenticationResponseDto logIn(AuthenticationRequestUserDto dto) throws BadRequestException {
         String username = dto.getEmail();
         String password = dto.getPassword();
-        //TODO revisar validacion de email vacio
         if(!iUserRepository.existsByEmail(username)){
-            throw new BadRequestException("There isn't an account with that email " + username);
+            throw new UsernameNotFoundException("There isn't an account with that email " + username);
         }
         if (!passwordEncoder.bCryptPasswordEncoder().matches(password,iUserRepository.findByEmail(username).getPassword())){
             throw new BadRequestException("Incorrect password");
         }
         final UserDetails userDetails = iUserService.loadUserByUsername(username);
-        System.out.println( userDetails.toString());
         final String jwt = jwtUtils.generateToken(userDetails);
         return new AuthenticationResponseDto(username,jwt);
     }

@@ -6,7 +6,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rentalUnits")
-public class RentalUnit {
+public class RentalUnitController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Void> getRentalUnit(@PathVariable Long id){

@@ -3,6 +3,7 @@ package com.complejolapasionaria.reservation.exceptions;
 import com.complejolapasionaria.reservation.exceptions.messageCostumerErrors.ErrorResponsesMessages;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,6 +23,14 @@ public class GlobalExceptions {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
     }
 
+    @ExceptionHandler({UsernameNotFoundException.class})
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponsesMessages> processUsernameValidation(UsernameNotFoundException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
     @ExceptionHandler({BadRequestException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponsesMessages> processValidationError(BadRequestException ex){
