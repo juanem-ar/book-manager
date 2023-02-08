@@ -2,15 +2,17 @@ package com.complejolapasionaria.reservation.controller;
 
 import com.complejolapasionaria.reservation.dto.CommerceBuildingRequestDto;
 import com.complejolapasionaria.reservation.dto.CommerceBuildingResponseDto;
+import com.complejolapasionaria.reservation.dto.TransactionPageDto;
 import com.complejolapasionaria.reservation.service.ICommerceBuildingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/commerce-buildings")
@@ -37,8 +39,11 @@ public class CommerceBuildingController {
 
     @GetMapping
     @Secured(value = {"ROLE_ADMIN"})
-    public ResponseEntity<List<Void>> getAllCommerceBuildings(){
-        return null;
+    public ResponseEntity<TransactionPageDto> getAllCommerceBuildingsByUserLogged(
+            @RequestParam(value = "page", defaultValue = "1") @PathVariable int page,
+            Authentication authentication, HttpServletRequest httpServletRequest) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                iCommerceBuildingService.getAllCommerceBuildingsByUserLogged(page, authentication,httpServletRequest));
     }
 
     @PatchMapping("/{id}")
