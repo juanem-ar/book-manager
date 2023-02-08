@@ -51,7 +51,9 @@ public class CommerceBuildingController {
     }
 
     @DeleteMapping("/{id}")
-    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
-    public void removeCommerceBuilding(@PathVariable Long id){}
+    @Secured(value = {"ROLE_ADMIN"})
+    public String removeCommerceBuilding(@PathVariable Long id,Authentication authentication) throws Exception {
+        return iCommerceBuildingService.removeCommerceBuilding(id,authentication);
+    }
 
 }

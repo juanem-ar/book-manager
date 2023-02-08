@@ -4,6 +4,7 @@ import com.complejolapasionaria.reservation.dto.CommerceBuildingRequestDto;
 import com.complejolapasionaria.reservation.dto.CommerceBuildingResponseDto;
 import com.complejolapasionaria.reservation.dto.TransactionPageDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
+import com.complejolapasionaria.reservation.exceptions.ResourceNotFound;
 import com.complejolapasionaria.reservation.mapper.ICommerceBuildingMapper;
 import com.complejolapasionaria.reservation.model.CommerceBuilding;
 import com.complejolapasionaria.reservation.model.User;
@@ -52,8 +53,10 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
     @Override
     public CommerceBuildingResponseDto getCommerceBuildingById(Long id) throws Exception {
         if (!iCommerceBuildingRepository.existsById(id))
-            throw new InvalidParameterException("Invalid commerce id");
+            throw new ResourceNotFound("Invalid commerce id");
         CommerceBuilding entity = iCommerceBuildingRepository.getReferenceById(id);
+        if(entity.getDeleted())
+            throw new ResourceNotFound("Resource removed.");
         CommerceBuildingResponseDto response = iCommerceBuildingMapper.toCommerceBuildingResponseDto(entity);
         setOwnerDetails(entity,response);
         return response;
@@ -62,7 +65,7 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
     @Override
     public TransactionPageDto getAllCommerceBuildingsByUserLogged(int page, Authentication authentication, HttpServletRequest httpServletRequest) throws Exception {
         if (page <= 0)
-            throw new InvalidParameterException("You request page not found, try page 1");
+            throw new ResourceNotFound("You request page not found, try page 1");
 
         Pageable pageWithTenElementsAndSortedByIdAscAndNameDesc = PageRequest.of(page-1,TRANSACTIONS_FOR_PAGE,
                 Sort.by("id")
@@ -71,7 +74,7 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
                                 .descending()));
 
         User user = iUserRepository.findByEmail(authentication.getName());
-        Page<CommerceBuilding> list = iCommerceBuildingRepository.findAllByOwner(user, pageWithTenElementsAndSortedByIdAscAndNameDesc);
+        Page<CommerceBuilding> list = iCommerceBuildingRepository.findAllByDeletedAndOwner(false,user, pageWithTenElementsAndSortedByIdAscAndNameDesc);
 
 
         //Pagination DTO
@@ -80,7 +83,7 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
         pagination.setTotalPages(totalPages);
 
         if (page > totalPages)
-            throw new InvalidParameterException("The page your request not found, try page 1 or go to previous page");
+            throw new ResourceNotFound("The page your request not found, try page 1 or go to previous page");
 
         String url = httpServletRequest
                 .getRequestURL().toString() + "?" + "page=";
@@ -105,11 +108,23 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
 
         User user = iUserRepository.findByEmail(authentication.getName());
         CommerceBuilding entity = iCommerceBuildingRepository.getReferenceByIdAndOwner(id,user);
+        if(entity.getDeleted())
+            throw new ResourceNotFound("Resource removed.");
         CommerceBuilding entityUpdated = iCommerceBuildingMapper.updateEntity(dto, entity);
         iCommerceBuildingRepository.save(entityUpdated);
         CommerceBuildingResponseDto response = iCommerceBuildingMapper.toCommerceBuildingResponseDto(entityUpdated);
         setOwnerDetails(entityUpdated,response);
         return response;
+    }
+
+    @Override
+    public String removeCommerceBuilding(Long id, Authentication authentication) throws Exception {
+        CommerceBuilding entitySelected = iCommerceBuildingRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Not exists commerce building with id number: "+ id));
+        if(!entitySelected.getOwner().getEmail().equals(authentication.getName()))
+            throw new ResourceNotFound("You don't have permission to delete this commerce building");
+        entitySelected.setDeleted(true);
+        iCommerceBuildingRepository.save(entitySelected);
+        return "Commerce Building removed.";
     }
 
     public void setOwnerDetails(CommerceBuilding cm, CommerceBuildingResponseDto response){

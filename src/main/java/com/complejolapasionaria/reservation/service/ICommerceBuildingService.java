@@ -4,7 +4,6 @@ import com.complejolapasionaria.reservation.dto.CommerceBuildingRequestDto;
 import com.complejolapasionaria.reservation.dto.CommerceBuildingResponseDto;
 import com.complejolapasionaria.reservation.dto.TransactionPageDto;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
 public interface ICommerceBuildingService {
@@ -12,4 +11,5 @@ public interface ICommerceBuildingService {
     CommerceBuildingResponseDto getCommerceBuildingById(Long id) throws Exception;
     TransactionPageDto getAllCommerceBuildingsByUserLogged(int page, Authentication authentication, HttpServletRequest httpServletRequest) throws Exception;
     CommerceBuildingResponseDto updateCommerceBuilding(Long id, Authentication authentication, CommerceBuildingRequestDto dto) throws Exception;
+    String removeCommerceBuilding(Long id, Authentication authentication) throws Exception;
 }

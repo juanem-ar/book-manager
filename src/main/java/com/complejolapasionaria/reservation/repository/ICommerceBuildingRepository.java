@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface ICommerceBuildingRepository extends JpaRepository<CommerceBuilding,Long> {
     boolean existsByName(String name);
     boolean existsById(Long id);
-    Page<CommerceBuilding> findAllByOwner(User user, Pageable page);
+    Page<CommerceBuilding> findAllByDeletedAndOwner(boolean deleted, User user, Pageable page);
     CommerceBuilding getReferenceByIdAndOwner(Long id, User user);
 }

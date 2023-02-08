@@ -80,4 +80,13 @@ public class GlobalExceptions {
         errorsResponseMessage.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
     }
+
+    @ExceptionHandler({ResourceNotFound.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponsesMessages> processValidationError(ResourceNotFound ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.NOT_FOUND);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorsResponseMessage);
+    }
 }
