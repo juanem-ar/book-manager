@@ -6,4 +6,5 @@ import org.springframework.security.core.Authentication;
 
 public interface ICommerceBuildingService {
     CommerceBuildingResponseDto save(CommerceBuildingRequestDto dto, Authentication authentication) throws Exception;
+    CommerceBuildingResponseDto getCommerceBuildingById(Long id) throws Exception;
 }

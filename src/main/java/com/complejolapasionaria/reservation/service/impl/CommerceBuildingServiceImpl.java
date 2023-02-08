@@ -10,7 +10,16 @@ import com.complejolapasionaria.reservation.repository.ICommerceBuildingReposito
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.service.ICommerceBuildingService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import javax.naming.directory.InvalidAttributesException;
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
@@ -34,5 +43,19 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
         entity.setDeleted(false);
         CommerceBuilding entitySaved = iCommerceBuildingRepository.save(entity);
         return iCommerceBuildingMapper.toCommerceBuildingResponseDto(entitySaved);
+    }
+
+    @Override
+    public CommerceBuildingResponseDto getCommerceBuildingById(Long id) throws Exception {
+        if (!iCommerceBuildingRepository.existsById(id))
+            throw new InvalidParameterException("Invalid commerce id");
+        CommerceBuilding entity = iCommerceBuildingRepository.getReferenceById(id);
+        CommerceBuildingResponseDto response = iCommerceBuildingMapper.toCommerceBuildingResponseDto(entity);
+        Map<String,String> ownerDetails = new HashMap<>();
+        ownerDetails.put("email",entity.getOwner().getEmail());
+        ownerDetails.put("address",entity.getOwner().getAddress());
+        ownerDetails.put("phone number",entity.getOwner().getPhoneNumber());
+        response.setOwnerDetails(ownerDetails);
+        return response;
     }
 }

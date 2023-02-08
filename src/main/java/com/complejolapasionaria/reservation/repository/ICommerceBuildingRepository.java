@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ICommerceBuildingRepository extends JpaRepository<CommerceBuilding,Long> {
     boolean existsByName(String name);
+    boolean existsById(Long id);
 }

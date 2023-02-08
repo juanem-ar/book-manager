@@ -1,9 +1,9 @@
 package com.complejolapasionaria.reservation.dto;
 
 import com.complejolapasionaria.reservation.model.RentalUnit;
-import com.complejolapasionaria.reservation.model.User;
 import lombok.Data;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class CommerceBuildingResponseDto {
@@ -11,5 +11,5 @@ public class CommerceBuildingResponseDto {
     private String name;
     private String address;
     private List<RentalUnit> rentalUnitList;
-    private User owner;
+    private Map<String,String> ownerDetails;
 }

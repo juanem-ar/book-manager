@@ -31,8 +31,8 @@ public class CommerceBuildingController {
 
     @GetMapping("/{id}")
     @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
-    public ResponseEntity<Void> getCommerceBuilding(@PathVariable Long id){
-        return null;
+    public ResponseEntity<CommerceBuildingResponseDto> getCommerceBuilding(@PathVariable Long id) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(iCommerceBuildingService.getCommerceBuildingById(id));
     }
 
     @GetMapping
