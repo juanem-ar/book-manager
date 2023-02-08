@@ -32,8 +32,9 @@ public class RentalUnitController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Void> getRentalUnit(@PathVariable Long id){
-        return null;
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    public ResponseEntity<RentalUnitResponseDto> getRentalUnit(@PathVariable Long id) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(iRentalUnitService.getRentalUnitById(id));
     }
 
     @GetMapping("/all/{id}")

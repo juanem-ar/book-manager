@@ -1,10 +1,6 @@
 package com.complejolapasionaria.reservation.dto;
 
-import com.complejolapasionaria.reservation.Enum.EPool;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

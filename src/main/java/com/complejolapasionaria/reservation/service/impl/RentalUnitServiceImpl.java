@@ -4,7 +4,9 @@ import com.complejolapasionaria.reservation.Enum.EStatus;
 import com.complejolapasionaria.reservation.dto.RentalUnitRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitResponseDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
+import com.complejolapasionaria.reservation.exceptions.ResourceNotFound;
 import com.complejolapasionaria.reservation.mapper.IRentalUnitMapper;
+import com.complejolapasionaria.reservation.model.CommerceBuilding;
 import com.complejolapasionaria.reservation.model.RentalUnit;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.ICommerceBuildingRepository;
@@ -32,12 +34,12 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     public RentalUnitResponseDto save(RentalUnitRequestDto dto, Authentication authentication) throws Exception {
 
         User user = iUserRepository.findByEmail(authentication.getName());
-
-        if(iRentalUnitRepository.existsByName(dto.getName()))
-            throw new BadRequestException("There is a rental unit with that name.");
+        CommerceBuilding commerce = iCommerceBuildingRepository.getReferenceById(dto.getBuildingId());
 
         if (!iCommerceBuildingRepository.existsByIdAndOwner(dto.getBuildingId(),user))
             throw new BadRequestException("Invalid commerce building id");
+        if(iRentalUnitRepository.existsByNameAndBuilding(dto.getName(),commerce))
+            throw new BadRequestException("There is a rental unit with that name.");
 
         RentalUnit entity = iRentalUnitMapper.toEntity(dto);
         entity.setDeleted(Boolean.FALSE);
@@ -45,5 +47,16 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
 
         RentalUnit entitySaved = iRentalUnitRepository.save(entity);
         return iRentalUnitMapper.toRentalUnitResponseDto(entitySaved);
+    }
+
+    @Override
+    public RentalUnitResponseDto getRentalUnitById(Long id) throws Exception {
+        if (!iRentalUnitRepository.existsById(id))
+            throw new ResourceNotFound("Invalid commerce id");
+        RentalUnit entity = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Not exists rental unit with id number: "+ id));
+        if(entity.getDeleted())
+            throw new ResourceNotFound("Resource removed.");
+        RentalUnitResponseDto response = iRentalUnitMapper.toRentalUnitResponseDto(entity);
+        return response;
     }
 }

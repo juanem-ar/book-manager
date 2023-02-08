@@ -56,7 +56,7 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
             throw new ResourceNotFound("Invalid commerce id");
         CommerceBuilding entity = iCommerceBuildingRepository.getReferenceById(id);
         if(entity.getDeleted())
-            throw new ResourceNotFound("Resource removed.");
+            throw new ResourceNotFound("Invalid commerce id");
         CommerceBuildingResponseDto response = iCommerceBuildingMapper.toCommerceBuildingResponseDto(entity);
         setOwnerDetails(entity,response);
         return response;

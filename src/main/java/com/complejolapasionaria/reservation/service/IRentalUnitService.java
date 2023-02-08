@@ -6,5 +6,6 @@ import org.springframework.security.core.Authentication;
 
 public interface IRentalUnitService {
     RentalUnitResponseDto save(RentalUnitRequestDto dto, Authentication authentication) throws Exception;
+    RentalUnitResponseDto getRentalUnitById(Long id) throws Exception;
 
 }

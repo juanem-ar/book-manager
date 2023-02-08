@@ -2,7 +2,6 @@ package com.complejolapasionaria.reservation.dto;
 
 import com.complejolapasionaria.reservation.Enum.EPool;
 import com.complejolapasionaria.reservation.Enum.EStatus;
-import com.complejolapasionaria.reservation.model.CommerceBuilding;
 import lombok.Data;
 
 @Data
