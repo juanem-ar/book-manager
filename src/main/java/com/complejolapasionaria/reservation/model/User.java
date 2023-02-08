@@ -2,9 +2,7 @@ package com.complejolapasionaria.reservation.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
@@ -41,7 +39,7 @@ public class User implements Serializable {
     private String lastName;
 
     @Email
-    @NotNull(message = "Email is required")
+    @NotEmpty(message = "Email is required")
     @Column(unique = true)
     private String email;
 
@@ -52,6 +50,7 @@ public class User implements Serializable {
     @NotNull(message = "Date of birth is required (YYYY-MM-dd).")
     @Column(name = "day_of_birth")
     @JsonFormat(pattern = "YYYY-MM-dd")
+    @Past
     private LocalDate dateOfBirth;
 
     @NotNull(message = "Address is required")

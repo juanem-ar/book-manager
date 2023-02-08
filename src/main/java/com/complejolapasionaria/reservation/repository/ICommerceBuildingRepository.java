@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ICommerceBuildingRepository extends JpaRepository<CommerceBuilding,Long> {
     boolean existsByName(String name);
+    boolean existsByIdAndOwner(Long id, User user);
     boolean existsById(Long id);
     Page<CommerceBuilding> findAllByDeletedAndOwner(boolean deleted, User user, Pageable page);
     CommerceBuilding getReferenceByIdAndOwner(Long id, User user);

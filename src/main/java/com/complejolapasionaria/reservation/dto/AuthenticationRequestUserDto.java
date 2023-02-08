@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.Length;
 public class AuthenticationRequestUserDto {
 
     @NotNull(message = "Email is required")
-    @Email
+    @Email(message = "Email format invalid")
     @Size(min = 6)
     @Schema(format = "email", example = "juanem@hotmail.com", minLength = 6, description = "User email")
     private String email;

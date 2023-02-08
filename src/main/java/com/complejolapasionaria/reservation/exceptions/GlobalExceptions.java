@@ -4,6 +4,7 @@ import com.complejolapasionaria.reservation.exceptions.messageCostumerErrors.Err
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,6 +37,14 @@ public class GlobalExceptions {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
     }
 
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponsesMessages> processValidationError(HttpMessageNotReadableException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
     @ExceptionHandler({AccessDeniedException.class})
     @ResponseStatus(code = HttpStatus.FORBIDDEN)
     public ResponseEntity<ErrorResponsesMessages> processAccessValidation(AccessDeniedException ex){
@@ -44,10 +53,18 @@ public class GlobalExceptions {
         errorsResponseMessage.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorsResponseMessage);
     }
-
     @ExceptionHandler({ExpiredJwtException.class})
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponsesMessages> jwtExpiredValidation(ExpiredJwtException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorsResponseMessage);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponsesMessages> processParametersValidation(IllegalArgumentException ex){
         ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
         errorsResponseMessage.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         errorsResponseMessage.setMessage(ex.getMessage());

@@ -4,12 +4,16 @@ import com.complejolapasionaria.reservation.Enum.EStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -49,11 +53,15 @@ public class Reservation  implements Serializable {
     @NotNull(message = "Check-in date is required (YYYY-MM-dd).")
     @Column(name = "check_in")
     @JsonFormat(pattern = "YYYY-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @FutureOrPresent
     private LocalDate checkIn;
 
     @NotNull(message = "Check-out date is required (YYYY-MM-dd).")
     @Column(name = "check_out")
     @JsonFormat(pattern = "YYYY-MM-dd")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Future
     private LocalDate checkOut;
 
     @NotNull(message = "Cost per night is required")

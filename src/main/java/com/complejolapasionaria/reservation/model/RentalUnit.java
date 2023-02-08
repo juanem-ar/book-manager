@@ -4,10 +4,12 @@ import com.complejolapasionaria.reservation.Enum.EPool;
 import com.complejolapasionaria.reservation.Enum.EStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -36,18 +38,19 @@ public class RentalUnit implements Serializable {
     private String name;
 
     @NotNull(message = "Description is required")
+    @Size(min = 3, max = 255)
     private String description;
 
     @NotNull(message = "Maximum of guests are required")
-    @Size(min = 1)
+    @Min(value= 1 , message = "Minimum required is 1")
     private int maximumAmountOfGuests;
 
     @NotNull(message = "Number of bedrooms are required")
-    @Size(min = 1)
+    @Min(value= 1 , message = "Minimum required is 1")
     private int numberOfBedrooms;
 
     @NotNull(message = "Number of rooms are required")
-    @Size(min = 1)
+    @Min(value = 1,message = "Minimum required is 1")
     private int numberOfRooms;
 
     @Enumerated(EnumType.STRING)
