@@ -10,6 +10,7 @@ public class CommerceBuildingResponseDto {
     private Long id;
     private String name;
     private String address;
+    private String phoneNumber;
     private List<RentalUnit> rentalUnitList;
     private Map<String,String> ownerDetails;
 }

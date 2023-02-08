@@ -33,6 +33,8 @@ public class CommerceBuilding implements Serializable {
     @NotNull(message = "commerce building's address is required.")
     private String address;
 
+    private String phoneNumber;
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "owner_id")
     private User owner;

@@ -11,4 +11,5 @@ public interface ICommerceBuildingService {
     CommerceBuildingResponseDto save(CommerceBuildingRequestDto dto, Authentication authentication) throws Exception;
     CommerceBuildingResponseDto getCommerceBuildingById(Long id) throws Exception;
     TransactionPageDto getAllCommerceBuildingsByUserLogged(int page, Authentication authentication, HttpServletRequest httpServletRequest) throws Exception;
+    CommerceBuildingResponseDto updateCommerceBuilding(Long id, Authentication authentication, CommerceBuildingRequestDto dto) throws Exception;
 }

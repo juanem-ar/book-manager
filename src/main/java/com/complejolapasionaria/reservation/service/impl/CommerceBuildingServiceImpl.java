@@ -98,6 +98,20 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
         return pagination;
     }
 
+    @Override
+    public CommerceBuildingResponseDto updateCommerceBuilding(Long id, Authentication authentication, CommerceBuildingRequestDto dto) throws Exception {
+        if(!iCommerceBuildingRepository.existsById(id))
+            throw new InvalidParameterException("Invalid commerce id");
+
+        User user = iUserRepository.findByEmail(authentication.getName());
+        CommerceBuilding entity = iCommerceBuildingRepository.getReferenceByIdAndOwner(id,user);
+        CommerceBuilding entityUpdated = iCommerceBuildingMapper.updateEntity(dto, entity);
+        iCommerceBuildingRepository.save(entityUpdated);
+        CommerceBuildingResponseDto response = iCommerceBuildingMapper.toCommerceBuildingResponseDto(entityUpdated);
+        setOwnerDetails(entityUpdated,response);
+        return response;
+    }
+
     public void setOwnerDetails(CommerceBuilding cm, CommerceBuildingResponseDto response){
         Map<String,String> ownerDetails = new HashMap<>();
         ownerDetails.put("email",cm.getOwner().getEmail());

@@ -12,4 +12,5 @@ public interface ICommerceBuildingRepository extends JpaRepository<CommerceBuild
     boolean existsByName(String name);
     boolean existsById(Long id);
     Page<CommerceBuilding> findAllByOwner(User user, Pageable page);
+    CommerceBuilding getReferenceByIdAndOwner(Long id, User user);
 }
