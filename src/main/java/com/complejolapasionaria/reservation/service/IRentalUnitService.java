@@ -12,5 +12,5 @@ public interface IRentalUnitService {
     RentalUnitResponseDto getRentalUnitById(Long id) throws Exception;
     RentalUnitPageDto getAllRentalUnit(int page, HttpServletRequest request) throws Exception;
     RentalUnitResponseDto updateRentalUnit(Long id, RentalUnitPatchRequestDto dto, Authentication authentication) throws Exception;
-
+    String removeRentalUnit(Long id,Authentication authentication) throws Exception;
 }

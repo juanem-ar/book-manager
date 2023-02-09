@@ -122,4 +122,16 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
 
         return iRentalUnitMapper.toRentalUnitResponseDto(entityUpdated);
     }
+
+    @Override
+    public String removeRentalUnit(Long id, Authentication authentication) throws Exception {
+        RentalUnit entitySelected = iRentalUnitRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Not exists rental unit with id number: "+ id));
+        if(!entitySelected.getBuilding().getOwner().getEmail().equals(authentication.getName()))
+            throw new ResourceNotFound("You don't have permission to delete this commerce building");
+        if(entitySelected.getDeleted())
+            throw new ResourceNotFound("It's resource doesn't exists.");
+        entitySelected.setDeleted(true);
+        iRentalUnitRepository.save(entitySelected);
+        return "Rental unit removed.";
+    }
 }

@@ -53,5 +53,8 @@ public class RentalUnitController {
     }
 
     @DeleteMapping("/{id}")
-    public void removeRentalUnit(@PathVariable Long id){}
+    @Secured(value = {"ROLE_ADMIN"})
+    public String removeRentalUnit(@PathVariable Long id,Authentication authentication) throws Exception {
+        return iRentalUnitService.removeRentalUnit(id,authentication);
+    }
 }
