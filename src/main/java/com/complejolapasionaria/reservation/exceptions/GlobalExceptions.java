@@ -2,6 +2,7 @@ package com.complejolapasionaria.reservation.exceptions;
 
 import com.complejolapasionaria.reservation.exceptions.messageCostumerErrors.ErrorResponsesMessages;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -54,39 +55,47 @@ public class GlobalExceptions {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorsResponseMessage);
     }
     @ExceptionHandler({ExpiredJwtException.class})
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponsesMessages> jwtExpiredValidation(ExpiredJwtException ex){
         ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
-        errorsResponseMessage.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        errorsResponseMessage.setHttpStatus(HttpStatus.NOT_FOUND);
         errorsResponseMessage.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorsResponseMessage);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorsResponseMessage);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class})
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponsesMessages> processParametersValidation(IllegalArgumentException ex){
-        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
-        errorsResponseMessage.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        errorsResponseMessage.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorsResponseMessage);
-    }
-
-    @ExceptionHandler({InvalidParameterException.class})
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponsesMessages> processParametersValidation(InvalidParameterException ex){
-        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
-        errorsResponseMessage.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        errorsResponseMessage.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorsResponseMessage);
-    }
-
-    @ExceptionHandler({UsernameNotFoundException.class})
+    @ExceptionHandler({ConstraintViolationException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponsesMessages> processUsernameValidation(UsernameNotFoundException ex){
+    public ResponseEntity<ErrorResponsesMessages> jwtExpiredValidation(ConstraintViolationException ex){
         ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
         errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
         errorsResponseMessage.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
+    @ExceptionHandler({IllegalArgumentException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponsesMessages> processParametersValidation(IllegalArgumentException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.NOT_FOUND);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorsResponseMessage);
+    }
+
+    @ExceptionHandler({InvalidParameterException.class})
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponsesMessages> processParametersValidation(InvalidParameterException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponsesMessages> processUsernameValidation(UsernameNotFoundException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.NOT_FOUND);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorsResponseMessage);
     }
 
     @ExceptionHandler({BadRequestException.class})
