@@ -2,7 +2,7 @@ package com.complejolapasionaria.reservation.service.impl;
 
 import com.complejolapasionaria.reservation.dto.CommerceBuildingRequestDto;
 import com.complejolapasionaria.reservation.dto.CommerceBuildingResponseDto;
-import com.complejolapasionaria.reservation.dto.TransactionPageDto;
+import com.complejolapasionaria.reservation.dto.page.CommerceBuildingPageDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
 import com.complejolapasionaria.reservation.exceptions.ResourceNotFound;
 import com.complejolapasionaria.reservation.mapper.ICommerceBuildingMapper;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 @Service
 public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
-    public static final Integer TRANSACTIONS_FOR_PAGE = 3;
+    public static final Integer COMMERCE_BUILDINGS_FOR_PAGE = 3;
     private final ICommerceBuildingRepository iCommerceBuildingRepository;
     private final ICommerceBuildingMapper iCommerceBuildingMapper;
     private final IUserRepository iUserRepository;
@@ -63,22 +63,20 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
     }
 
     @Override
-    public TransactionPageDto getAllCommerceBuildingsByUserLogged(int page, Authentication authentication, HttpServletRequest httpServletRequest) throws Exception {
+    public CommerceBuildingPageDto getAllCommerceBuildings(int page , HttpServletRequest httpServletRequest) throws Exception {
         if (page <= 0)
             throw new ResourceNotFound("You request page not found, try page 1");
 
-        Pageable pageWithTenElementsAndSortedByIdAscAndNameDesc = PageRequest.of(page-1,TRANSACTIONS_FOR_PAGE,
+        Pageable pageWithThreeElementsAndSortedByIdAscAndNameDesc = PageRequest.of(page-1, COMMERCE_BUILDINGS_FOR_PAGE,
                 Sort.by("id")
                         .ascending()
                         .and(Sort.by("name")
                                 .descending()));
 
-        User user = iUserRepository.findByEmail(authentication.getName());
-        Page<CommerceBuilding> list = iCommerceBuildingRepository.findAllByDeletedAndOwner(false,user, pageWithTenElementsAndSortedByIdAscAndNameDesc);
-
+        Page<CommerceBuilding> list = iCommerceBuildingRepository.findAllByDeleted(false, pageWithThreeElementsAndSortedByIdAscAndNameDesc);
 
         //Pagination DTO
-        TransactionPageDto pagination = new TransactionPageDto();
+        CommerceBuildingPageDto pagination = new CommerceBuildingPageDto();
         int totalPages = list.getTotalPages();
         pagination.setTotalPages(totalPages);
 
@@ -97,7 +95,7 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
                 setOwnerDetails(entity,dto);
             }
         }
-        pagination.setTransactionDtoList(responseList);
+        pagination.setCommerceBuildingDtoList(responseList);
         return pagination;
     }
 

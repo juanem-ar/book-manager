@@ -2,7 +2,7 @@ package com.complejolapasionaria.reservation.controller;
 
 import com.complejolapasionaria.reservation.dto.CommerceBuildingRequestDto;
 import com.complejolapasionaria.reservation.dto.CommerceBuildingResponseDto;
-import com.complejolapasionaria.reservation.dto.TransactionPageDto;
+import com.complejolapasionaria.reservation.dto.page.CommerceBuildingPageDto;
 import com.complejolapasionaria.reservation.service.ICommerceBuildingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,9 +37,9 @@ public class CommerceBuildingController {
     }
 
     @GetMapping
-    @Secured(value = {"ROLE_ADMIN"})
-    public ResponseEntity<TransactionPageDto> getAllCommerceBuildingsByUserLogged(@RequestParam(value = "page", defaultValue = "1") @PathVariable int page, Authentication authentication, HttpServletRequest httpServletRequest) throws Exception {
-        return ResponseEntity.status(HttpStatus.OK).body(iCommerceBuildingService.getAllCommerceBuildingsByUserLogged(page, authentication,httpServletRequest));
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
+    public ResponseEntity<CommerceBuildingPageDto> getAllCommerceBuildingsByUserLogged(@RequestParam(value = "page", defaultValue = "1") @PathVariable int page, HttpServletRequest httpServletRequest) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(iCommerceBuildingService.getAllCommerceBuildings(page,httpServletRequest));
     }
 
     @PatchMapping("/{id}")

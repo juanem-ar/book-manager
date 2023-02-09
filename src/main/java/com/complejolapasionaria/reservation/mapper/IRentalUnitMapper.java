@@ -1,11 +1,14 @@
 package com.complejolapasionaria.reservation.mapper;
 
 import com.complejolapasionaria.reservation.Enum.EPool;
+import com.complejolapasionaria.reservation.dto.RentalUnitPatchRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitResponseDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
 import com.complejolapasionaria.reservation.model.RentalUnit;
 import org.mapstruct.*;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -16,6 +19,8 @@ public interface IRentalUnitMapper {
     RentalUnit toEntity(RentalUnitRequestDto dto);
     @Mapping(target = "buildingId",source = "building.id")
     RentalUnitResponseDto toRentalUnitResponseDto(RentalUnit entity);
+    List<RentalUnitResponseDto> toRentalUnitResponseDtoList(List<RentalUnit> list);
+    RentalUnit updateEntity(RentalUnitPatchRequestDto dto, @MappingTarget RentalUnit entity);
 
     default EPool stringToEPool(String dto) throws BadRequestException {
         if (dto.equalsIgnoreCase("PRIVATE") || dto.equalsIgnoreCase("privada"))

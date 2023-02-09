@@ -1,4 +1,4 @@
-package com.complejolapasionaria.reservation.dto;
+package com.complejolapasionaria.reservation.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

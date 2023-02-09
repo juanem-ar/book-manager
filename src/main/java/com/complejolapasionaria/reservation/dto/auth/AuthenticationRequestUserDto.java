@@ -1,4 +1,4 @@
-package com.complejolapasionaria.reservation.dto;
+package com.complejolapasionaria.reservation.dto.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;

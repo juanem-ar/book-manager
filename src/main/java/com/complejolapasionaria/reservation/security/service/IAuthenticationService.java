@@ -1,7 +1,7 @@
 package com.complejolapasionaria.reservation.security.service;
 
-import com.complejolapasionaria.reservation.dto.AuthenticationRequestUserDto;
-import com.complejolapasionaria.reservation.dto.AuthenticationResponseDto;
+import com.complejolapasionaria.reservation.dto.auth.AuthenticationRequestUserDto;
+import com.complejolapasionaria.reservation.dto.auth.AuthenticationResponseDto;
 import com.complejolapasionaria.reservation.dto.RequestUserDto;
 import com.complejolapasionaria.reservation.dto.ResponseUserDto;
 
