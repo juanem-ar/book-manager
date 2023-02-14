@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.security.InvalidParameterException;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 
 @RestControllerAdvice
@@ -66,6 +67,15 @@ public class GlobalExceptions {
     @ExceptionHandler({ConstraintViolationException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponsesMessages> jwtExpiredValidation(ConstraintViolationException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
+
+    @ExceptionHandler({DateTimeParseException.class})
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponsesMessages> reservationValidations(DateTimeParseException ex){
         ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
         errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
         errorsResponseMessage.setMessage(ex.getMessage());

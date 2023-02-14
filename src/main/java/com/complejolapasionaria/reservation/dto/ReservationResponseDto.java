@@ -1,7 +1,6 @@
 package com.complejolapasionaria.reservation.dto;
 
 import com.complejolapasionaria.reservation.Enum.EStatus;
-import com.complejolapasionaria.reservation.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +13,9 @@ public class ReservationResponseDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private User user;
+    private String unitName;
+    private String fullName;
+    private String phone;
     private Boolean deleted;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
@@ -33,13 +34,15 @@ public class ReservationResponseDto {
     public String toString() {
         return "Reservation: [" +
                 "id: " + this.id + "\n" +
-                "user: " + this.user + "\n" +
+                "user: " + this.fullName + "\n" +
+                "phone: " + this.phone + "\n" +
                 "deleted: " + this.deleted + "\n" +
                 "creation date: " + this.creationDate + "\n" +
                 "update date: " + this.updateDate + "\n" +
                 "amount of people: " + this.amountOfPeople + "\n" +
                 "check-i date: " + this.checkIn + "\n" +
                 "check-out date: " + this.checkOut + "\n" +
+                "unit name: " + this.unitName + "\n" +
                 "cost per night: " + this.costPerNight + "\n" +
                 "partial payment: " + this.partialPayment + "\n" +
                 "payment percent: " + this.percent + "\n" +

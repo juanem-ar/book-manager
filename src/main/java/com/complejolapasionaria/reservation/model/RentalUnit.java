@@ -11,6 +11,8 @@ import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -57,4 +59,7 @@ public class RentalUnit implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private EPool pool;
+
+    @OneToMany(mappedBy = "unit")
+    private List<Reservation> reservationList = new ArrayList<>();
 }

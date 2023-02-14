@@ -1,7 +1,6 @@
 package com.complejolapasionaria.reservation.model;
 
 import com.complejolapasionaria.reservation.Enum.EStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -35,6 +34,11 @@ public class Reservation  implements Serializable {
     @JsonIgnore
     private User user;
 
+    @ManyToOne(fetch = FetchType.EAGER,optional = false)
+    @JoinColumn(name = "unit_id", updatable = false)
+    @JsonIgnore
+    private RentalUnit unit;
+
     @CreationTimestamp
     private LocalDateTime creationDate;
 
@@ -49,14 +53,12 @@ public class Reservation  implements Serializable {
 
     @NotNull(message = "Check-in date is required (YYYY-MM-dd).")
     @Column(name = "check_in")
-    @JsonFormat(pattern = "YYYY/MM/dd")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @FutureOrPresent
     private LocalDate checkIn;
 
     @NotNull(message = "Check-out date is required (YYYY-MM-dd).")
     @Column(name = "check_out")
-    @JsonFormat(pattern = "YYYY/MM/dd")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Future
     private LocalDate checkOut;
