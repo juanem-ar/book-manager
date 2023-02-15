@@ -10,4 +10,5 @@ public interface IReservationService {
     ReservationResponseDto userReserve(ReservationRequestDto dto, Authentication authentication, Long id) throws Exception;
     ReservationResponseDto reservationSave(ReservationRequestDto dto, User user, Long id) throws Exception;
     ReservationResponseDto getById(Long id, Authentication authentication) throws Exception;
+    ReservationResponseDto getByIdAndAdminRole(Long id) throws Exception;
 }

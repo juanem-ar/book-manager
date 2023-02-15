@@ -46,4 +46,10 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> getReservationById(@PathVariable Long id, Authentication authentication)throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(iReservationService.getById(id, authentication));
     }
+
+    @GetMapping("/{id}/any")
+    @Secured(value = {"ROLE_ADMIN"})
+    public ResponseEntity<ReservationResponseDto> getReservationByIdAndAdmin(@PathVariable Long id)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(iReservationService.getByIdAndAdminRole(id));
+    }
 }
