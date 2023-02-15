@@ -71,7 +71,6 @@ public class ReservationServiceImpl implements IReservationService {
 
     @Override
     public ReservationResponseDto getById(Long id, Authentication authentication) throws Exception {
-
         if (!iReservationRepository.getReferenceById(id).getUser().getEmail().equals(authentication.getName()))
             throw new ResourceNotFound("This resource doesn't belong you.");
         Reservation entity = iReservationRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid reservation id"));
