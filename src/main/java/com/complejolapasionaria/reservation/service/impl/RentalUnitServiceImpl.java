@@ -1,6 +1,7 @@
 package com.complejolapasionaria.reservation.service.impl;
 
 import com.complejolapasionaria.reservation.Enum.EStatus;
+import com.complejolapasionaria.reservation.dto.RentalUnitAdminResponseDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitPatchRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitResponseDto;
@@ -13,6 +14,7 @@ import com.complejolapasionaria.reservation.model.RentalUnit;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.ICommerceBuildingRepository;
 import com.complejolapasionaria.reservation.repository.IRentalUnitRepository;
+import com.complejolapasionaria.reservation.repository.IReservationRepository;
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.service.IRentalUnitService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,12 +34,14 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     private final IRentalUnitMapper iRentalUnitMapper;
     private final ICommerceBuildingRepository iCommerceBuildingRepository;
     private final IUserRepository iUserRepository;
+    private final IReservationRepository iReservationRepository;
 
-    public RentalUnitServiceImpl(IRentalUnitRepository iRentalUnitRepository, IRentalUnitMapper iRentalUnitMapper, ICommerceBuildingRepository iCommerceBuildingRepository, IUserRepository iUserRepository) {
+    public RentalUnitServiceImpl(IRentalUnitRepository iRentalUnitRepository, IRentalUnitMapper iRentalUnitMapper, ICommerceBuildingRepository iCommerceBuildingRepository, IUserRepository iUserRepository, IReservationRepository iReservationRepository) {
         this.iRentalUnitRepository = iRentalUnitRepository;
         this.iRentalUnitMapper = iRentalUnitMapper;
         this.iCommerceBuildingRepository = iCommerceBuildingRepository;
         this.iUserRepository = iUserRepository;
+        this.iReservationRepository = iReservationRepository;
     }
 
     @Override
@@ -133,5 +137,13 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
         entitySelected.setDeleted(true);
         iRentalUnitRepository.save(entitySelected);
         return "Rental unit removed.";
+    }
+
+    @Override
+    public RentalUnitAdminResponseDto getRentalUnitByAdmin(Long id) throws Exception {
+        RentalUnitResponseDto userResponse = getRentalUnitById(id);
+        RentalUnitAdminResponseDto adminResponse = iRentalUnitMapper.toRentalUnitAdminResponseDto(userResponse);
+        adminResponse.setReservationList(iReservationRepository.findAllByUnitId(id));
+        return adminResponse;
     }
 }

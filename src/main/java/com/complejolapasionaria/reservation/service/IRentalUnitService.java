@@ -1,5 +1,6 @@
 package com.complejolapasionaria.reservation.service;
 
+import com.complejolapasionaria.reservation.dto.RentalUnitAdminResponseDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitPatchRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitResponseDto;
@@ -13,4 +14,5 @@ public interface IRentalUnitService {
     RentalUnitPageDto getAllRentalUnit(int page, HttpServletRequest request) throws Exception;
     RentalUnitResponseDto updateRentalUnit(Long id, RentalUnitPatchRequestDto dto, Authentication authentication) throws Exception;
     String removeRentalUnit(Long id,Authentication authentication) throws Exception;
+    RentalUnitAdminResponseDto getRentalUnitByAdmin(Long id) throws Exception;
 }

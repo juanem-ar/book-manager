@@ -1,5 +1,6 @@
 package com.complejolapasionaria.reservation.controller;
 
+import com.complejolapasionaria.reservation.dto.RentalUnitAdminResponseDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitPatchRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitResponseDto;
@@ -37,6 +38,11 @@ public class RentalUnitController {
     @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     public ResponseEntity<RentalUnitResponseDto> getRentalUnit(@PathVariable Long id) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(iRentalUnitService.getRentalUnitById(id));
+    }
+    @GetMapping("/{id}/reservations")
+    @Secured(value = {"ROLE_ADMIN"})
+    public ResponseEntity<RentalUnitAdminResponseDto> getRentalUnitByAdmin(@PathVariable Long id) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(iRentalUnitService.getRentalUnitByAdmin(id));
     }
 
     @GetMapping

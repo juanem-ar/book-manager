@@ -1,6 +1,7 @@
 package com.complejolapasionaria.reservation.mapper;
 
 import com.complejolapasionaria.reservation.Enum.EPool;
+import com.complejolapasionaria.reservation.dto.RentalUnitAdminResponseDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitPatchRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitRequestDto;
 import com.complejolapasionaria.reservation.dto.RentalUnitResponseDto;
@@ -21,6 +22,8 @@ public interface IRentalUnitMapper {
     RentalUnitResponseDto toRentalUnitResponseDto(RentalUnit entity);
     List<RentalUnitResponseDto> toRentalUnitResponseDtoList(List<RentalUnit> list);
     RentalUnit updateEntity(RentalUnitPatchRequestDto dto, @MappingTarget RentalUnit entity);
+
+    RentalUnitAdminResponseDto toRentalUnitAdminResponseDto(RentalUnitResponseDto dto);
 
     default EPool stringToEPool(String dto) throws BadRequestException {
         if (dto.equalsIgnoreCase("PRIVATE") || dto.equalsIgnoreCase("privada"))
