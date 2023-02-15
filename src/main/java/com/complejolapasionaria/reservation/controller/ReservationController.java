@@ -30,6 +30,7 @@ public class ReservationController {
             Authentication authentication) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(iReservationService.userReserve(dto, authentication, id));
     }
+
     @PostMapping("/create/rental-units/{id}/users/{userId}")
     @Secured(value = {"ROLE_ADMIN"})
     public ResponseEntity<ReservationResponseDto> reservationCreateByAdmin(
@@ -38,5 +39,11 @@ public class ReservationController {
             @PathVariable Long id,
             @PathVariable Long userId) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(iReservationService.adminReserve(dto,authentication, userId, id));
+    }
+
+    @GetMapping("/{id}")
+    @Secured(value = {"ROLE_USER"})
+    public ResponseEntity<ReservationResponseDto> getReservationById(@PathVariable Long id, Authentication authentication)throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(iReservationService.getById(id, authentication));
     }
 }

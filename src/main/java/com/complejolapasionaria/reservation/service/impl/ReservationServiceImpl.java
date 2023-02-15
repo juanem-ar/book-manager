@@ -66,10 +66,24 @@ public class ReservationServiceImpl implements IReservationService {
         Reservation reservationReserved = iReservationRepository.save(reservation);
 
         ReservationResponseDto response =  iReservationMapper.toResponseDto(reservationReserved);
-        response.setFullName(reservation.getUser().getFirstName() + " " + reservation.getUser().getLastName());
-        response.setUnitName(reservation.getUnit().getName());
-        response.setPhone(reservation.getUser().getPhoneNumber());
-        return response;
+        return setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(response,reservation);
+    }
+
+    @Override
+    public ReservationResponseDto getById(Long id, Authentication authentication) throws Exception {
+
+        if (!iReservationRepository.getReferenceById(id).getUser().getEmail().equals(authentication.getName()))
+            throw new ResourceNotFound("This resource doesn't belong you.");
+        Reservation entity = iReservationRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid reservation id"));
+        ReservationResponseDto response = iReservationMapper.toResponseDto(entity);
+        return setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(response,entity);
+    }
+
+    public ReservationResponseDto setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(ReservationResponseDto dto, Reservation entity){
+        dto.setFullName(entity.getUser().getFirstName() + " " + entity.getUser().getLastName());
+        dto.setUnitName(entity.getUnit().getName());
+        dto.setPhone(entity.getUser().getPhoneNumber());
+        return dto;
     }
 
     public Reservation reservationSettings(Reservation entity,User user, Long id){
