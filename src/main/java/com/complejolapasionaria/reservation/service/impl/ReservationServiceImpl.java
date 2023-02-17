@@ -6,6 +6,7 @@ import com.complejolapasionaria.reservation.dto.ReservationResponseDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
 import com.complejolapasionaria.reservation.exceptions.ResourceNotFound;
 import com.complejolapasionaria.reservation.mapper.IReservationMapper;
+import com.complejolapasionaria.reservation.model.RentalUnit;
 import com.complejolapasionaria.reservation.model.Reservation;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.IRentalUnitRepository;
@@ -71,9 +72,9 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     public void validationToReserve(ReservationRequestDto dto, Long id, boolean isCreated) throws Exception {
-
-        if (!iRentalUnitRepository.existsById(id))
-            throw new ResourceNotFound("Invalid rental unit id");
+        RentalUnit rentalUnit = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
+        if (!rentalUnit.getStatus().equals(EStatus.STATUS_ENABLE))
+            throw new ResourceNotFound("Rental unit is locked");
 
         if (dto.getCheckIn().equals(dto.getCheckOut()))
             throw new BadRequestException("check in and check out ares equals");

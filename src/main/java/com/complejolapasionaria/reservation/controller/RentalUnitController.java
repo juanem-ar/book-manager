@@ -63,4 +63,14 @@ public class RentalUnitController {
     public String removeRentalUnit(@PathVariable Long id,Authentication authentication) throws Exception {
         return iRentalUnitService.removeRentalUnit(id,authentication);
     }
+    @PostMapping("/{id}/lock")
+    @Secured(value = {"ROLE_ADMIN"})
+    public ResponseEntity<String> lockRentalUnitByAdmin(@PathVariable Long id, Authentication authentication) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(iRentalUnitService.lockRentalUnit(id, authentication));
+    }
+    @PostMapping("/{id}/enable")
+    @Secured(value = {"ROLE_ADMIN"})
+    public ResponseEntity<String> enableRentalUnitByAdmin(@PathVariable Long id, Authentication authentication) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(iRentalUnitService.enableRentalUnit(id, authentication));
+    }
 }

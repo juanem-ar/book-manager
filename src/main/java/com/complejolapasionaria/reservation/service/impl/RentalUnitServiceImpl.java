@@ -148,4 +148,27 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
         adminResponse.setBuildingName(iCommerceBuildingRepository.getReferenceById(userResponse.getBuildingId()).getName());
         return adminResponse;
     }
+
+    @Override
+    public String lockRentalUnit(Long id, Authentication authentication) throws Exception {
+        RentalUnit entity = ownerValidations(id,authentication);
+        entity.setStatus(EStatus.STATUS_LOCKED);
+        iRentalUnitRepository.save(entity);
+        return "Rental unit id: " + id + " locked by admin: " + entity.getBuilding().getOwner().getFirstName() + " " + entity.getBuilding().getOwner().getLastName();
+    }
+    @Override
+    public String enableRentalUnit(Long id, Authentication authentication) throws Exception {
+        RentalUnit entity = ownerValidations(id,authentication);
+        entity.setStatus(EStatus.STATUS_ENABLE);
+        iRentalUnitRepository.save(entity);
+        return "Rental unit id: " + id + " enabled by admin: " + entity.getBuilding().getOwner().getFirstName() + " " + entity.getBuilding().getOwner().getLastName();
+    }
+    public RentalUnit ownerValidations(Long id, Authentication authentication) throws Exception{
+        RentalUnit entity = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
+        if(!entity.getBuilding().getOwner().getEmail().equals(authentication.getName()))
+            throw new ResourceNotFound("You don't have permission to lock this rental unit");
+        if(entity.getDeleted())
+            throw new ResourceNotFound("It's resource doesn't exists.");
+        return entity;
+    }
 }
