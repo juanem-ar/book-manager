@@ -10,4 +10,5 @@ import java.util.List;
 public interface IReservationRepository extends JpaRepository<Reservation,Long> {
     List<Reservation> findAllByUnitId(Long id);
     boolean existsByCheckInLessThanAndCheckOutGreaterThanAndDeletedAndUnitId(LocalDate checkIn, LocalDate checkOut, boolean deleted, Long id);
+    boolean existsByIdNotAndCheckInLessThanAndCheckOutGreaterThanAndDeletedAndUnitId(Long id, LocalDate checkIn, LocalDate checkOut, boolean deleted, Long unitId);
 }

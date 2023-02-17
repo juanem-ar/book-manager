@@ -5,7 +5,7 @@ import com.complejolapasionaria.reservation.dto.ReservationResponseDto;
 import org.springframework.security.core.Authentication;
 
 public interface IReservationService {
-    ReservationResponseDto adminReserve(ReservationRequestDto dto,Authentication authentication, Long userId, Long id ) throws Exception;
+    ReservationResponseDto adminReserve(ReservationRequestDto dto,Authentication authentication, Long userId, Long rentalUnitId ) throws Exception;
     ReservationResponseDto userReserve(ReservationRequestDto dto, Authentication authentication, Long id) throws Exception;
     ReservationResponseDto getById(Long id, Authentication authentication) throws Exception;
     ReservationResponseDto getByIdAndAdminRole(Long id, Authentication authentication) throws Exception;
