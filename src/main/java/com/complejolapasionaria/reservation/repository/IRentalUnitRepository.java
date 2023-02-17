@@ -14,5 +14,4 @@ public interface IRentalUnitRepository extends JpaRepository<RentalUnit,Long> {
     boolean existsByNameAndBuilding(String name, CommerceBuilding id);
     boolean existsByIdAndBuildingIn(Long id, List<CommerceBuilding> buildingList);
     Page<RentalUnit> findAllByDeleted(boolean deleted, Pageable page);
-    RentalUnit findByIdAndBuildingIn(Long id, List<CommerceBuilding> list);
 }

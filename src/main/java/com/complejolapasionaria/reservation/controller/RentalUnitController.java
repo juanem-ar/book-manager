@@ -41,8 +41,8 @@ public class RentalUnitController {
     }
     @GetMapping("/{id}/reservations")
     @Secured(value = {"ROLE_ADMIN"})
-    public ResponseEntity<RentalUnitAdminResponseDto> getRentalUnitByAdmin(@PathVariable Long id) throws Exception {
-        return ResponseEntity.status(HttpStatus.OK).body(iRentalUnitService.getRentalUnitByAdmin(id));
+    public ResponseEntity<RentalUnitAdminResponseDto> getRentalUnitByAdmin(@PathVariable Long id, Authentication authentication) throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(iRentalUnitService.getRentalUnitByAdmin(id, authentication));
     }
 
     @GetMapping

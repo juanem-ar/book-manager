@@ -65,13 +65,10 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
 
     @Override
     public RentalUnitResponseDto getRentalUnitById(Long id) throws Exception {
-        if (!iRentalUnitRepository.existsById(id))
-            throw new ResourceNotFound("Invalid commerce id");
         RentalUnit entity = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Not exists rental unit with id number: "+ id));
         if(entity.getDeleted())
             throw new ResourceNotFound("Resource removed.");
-        RentalUnitResponseDto response = iRentalUnitMapper.toRentalUnitResponseDto(entity);
-        return response;
+        return iRentalUnitMapper.toRentalUnitResponseDto(entity);
     }
 
     @Override
@@ -131,7 +128,7 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     public String removeRentalUnit(Long id, Authentication authentication) throws Exception {
         RentalUnit entitySelected = iRentalUnitRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Not exists rental unit with id number: "+ id));
         if(!entitySelected.getBuilding().getOwner().getEmail().equals(authentication.getName()))
-            throw new ResourceNotFound("You don't have permission to delete this commerce building");
+            throw new ResourceNotFound("You don't have permission to delete this rental unit");
         if(entitySelected.getDeleted())
             throw new ResourceNotFound("It's resource doesn't exists.");
         entitySelected.setDeleted(true);
@@ -140,10 +137,15 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     }
 
     @Override
-    public RentalUnitAdminResponseDto getRentalUnitByAdmin(Long id) throws Exception {
+    public RentalUnitAdminResponseDto getRentalUnitByAdmin(Long id, Authentication authentication) throws Exception {
+        User user = iUserRepository.findByEmail(authentication.getName());
+        List<CommerceBuilding> commerceBuildingList = iCommerceBuildingRepository.findAllByOwner(user);
+        if(!iRentalUnitRepository.existsByIdAndBuildingIn(id,commerceBuildingList))
+            throw new ResourceNotFound("This resource doesn't belong you.");
         RentalUnitResponseDto userResponse = getRentalUnitById(id);
         RentalUnitAdminResponseDto adminResponse = iRentalUnitMapper.toRentalUnitAdminResponseDto(userResponse);
         adminResponse.setReservationList(iReservationRepository.findAllByUnitId(id));
+        adminResponse.setBuildingName(iCommerceBuildingRepository.getReferenceById(userResponse.getBuildingId()).getName());
         return adminResponse;
     }
 }

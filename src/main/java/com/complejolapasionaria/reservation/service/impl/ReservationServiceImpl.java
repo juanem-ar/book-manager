@@ -15,6 +15,7 @@ import com.complejolapasionaria.reservation.service.IReservationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
@@ -32,7 +33,7 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     @Override
-    public ReservationResponseDto adminReserve(ReservationRequestDto dto,Authentication authentication, Long userId, Long id) throws Exception {
+    public ReservationResponseDto adminReserve(ReservationRequestDto dto,Authentication authentication, Long userId, Long id ) throws Exception {
         User user = iUserRepository.findById(userId).orElseThrow(()-> new ResourceNotFound("Invalid id"));
         if (!iRentalUnitRepository.getReferenceById(id).getBuilding().getOwner().getEmail().equals(authentication.getName()))
             throw new ResourceNotFound("This resource doesn't belong you.");
@@ -40,33 +41,38 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     @Override
-    @Transactional
     public ReservationResponseDto userReserve(ReservationRequestDto dto,Authentication authentication, Long id) throws Exception{
         User user = iUserRepository.findByEmail(authentication.getName());
         return reservationSave(dto,user,id);
     }
 
-    @Override
     @Transactional
     public ReservationResponseDto reservationSave(ReservationRequestDto dto, User user, Long id) throws Exception {
 
-        if (!iRentalUnitRepository.existsById(id))
-            throw new ResourceNotFound("Invalid commerce id");
-
-        if (dto.getCheckIn().equals(dto.getCheckOut()))
-            throw new BadRequestException("check in and check out ares equals");
-        else if (dto.getCheckIn().isAfter(dto.getCheckOut()))
-            throw new BadRequestException("Invalid date");
-
-        if (iReservationRepository.existsByCheckInLessThanAndCheckOutGreaterThanAndUnitId(dto.getCheckOut(),dto.getCheckIn(),id))
-            throw new ResourceNotFound("unit not available");
+        validationToReserve(dto,id);
 
         Reservation reservation = iReservationMapper.toEntity(dto);
         reservationSettings(reservation, user, id);
+
         Reservation reservationReserved = iReservationRepository.save(reservation);
 
         ReservationResponseDto response =  iReservationMapper.toResponseDto(reservationReserved);
         return setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(response,reservation);
+    }
+
+    public void validationToReserve(ReservationRequestDto dto, Long id) throws Exception {
+
+        if (!iRentalUnitRepository.existsById(id))
+            throw new ResourceNotFound("Invalid rental unit id");
+
+        if (dto.getCheckIn().equals(dto.getCheckOut()))
+            throw new BadRequestException("check in and check out ares equals");
+
+        if (dto.getCheckIn().isAfter(dto.getCheckOut()))
+            throw new BadRequestException("Invalid date");
+
+        if (iReservationRepository.existsByCheckInLessThanAndCheckOutGreaterThanAndDeletedAndUnitId(dto.getCheckOut(), dto.getCheckIn(),false, id))
+            throw new ResourceNotFound("unit not available");
     }
 
     @Override
@@ -77,8 +83,36 @@ public class ReservationServiceImpl implements IReservationService {
     }
 
     @Override
-    public ReservationResponseDto getByIdAndAdminRole(Long id) throws Exception {
+    public ReservationResponseDto getByIdAndAdminRole(Long id, Authentication authentication) throws Exception {
+        if (!iReservationRepository.getReferenceById(id).getUnit().getBuilding().getOwner().getEmail().equals(authentication.getName()))
+            throw new ResourceNotFound("This resource doesn't belong you.");
         return getReservation(id);
+    }
+
+    @Override
+    @Transactional
+    public ReservationResponseDto update(ReservationRequestDto request, Long id, Long userId, Authentication authentication) throws Exception {
+        User user = iUserRepository.findById(userId).orElseThrow(()-> new ResourceNotFound("Invalid id"));
+        Reservation entity = iReservationRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid reservation id"));
+        if (entity.getDeleted())
+            throw new ResourceNotFound("This resource doesn't exists.");
+
+        entity.setDeleted(true);
+        iReservationRepository.save(entity);
+        entity.setDeleted(false);
+
+        validationToReserve(request,entity.getUnit().getId());
+
+        entity.setAmountOfPeople(request.getAmountOfPeople());
+        entity.setCheckIn(request.getCheckIn());
+        entity.setCheckOut(request.getCheckOut());
+        entity.setPercent(request.getPercent());
+        entity.setCostPerNight(request.getCostPerNight());
+        reservationSettings(entity, user, entity.getUnit().getId());
+        Reservation entitySaved = iReservationRepository.save(entity);
+        ReservationResponseDto response = iReservationMapper.toResponseDto(entitySaved);
+
+        return setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(response,entitySaved);
     }
 
     public ReservationResponseDto getReservation(Long id)throws Exception{

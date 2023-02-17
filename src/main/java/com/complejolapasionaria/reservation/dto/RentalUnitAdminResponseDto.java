@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class RentalUnitAdminResponseDto {
-    private Long buildingId;
+    private String buildingName;
     private String name;
     private String description;
     private int maximumAmountOfGuests;
