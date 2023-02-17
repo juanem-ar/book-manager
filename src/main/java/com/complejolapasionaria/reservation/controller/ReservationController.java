@@ -60,4 +60,14 @@ public class ReservationController {
                                                                     Authentication authentication) throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(iReservationService.update(dto, id, userId, authentication));
     }
+    @DeleteMapping("/{id}")
+    @Secured(value = {"ROLE_ADMIN"})
+    public ResponseEntity<String> removeReservationByAdmin(@PathVariable Long id, Authentication authentication) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(iReservationService.removeReservation(id, authentication));
+    }
+    @PostMapping("/{id}/confirm")
+    @Secured(value = {"ROLE_ADMIN"})
+    public ResponseEntity<String> confirmReservationByAdmin(@PathVariable Long id, Authentication authentication) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(iReservationService.confirmReservation(id, authentication));
+    }
 }
