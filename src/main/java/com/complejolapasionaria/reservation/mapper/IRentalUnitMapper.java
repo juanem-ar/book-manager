@@ -23,7 +23,7 @@ public interface IRentalUnitMapper {
     List<RentalUnitResponseDto> toRentalUnitResponseDtoList(List<RentalUnit> list);
     RentalUnit updateEntity(RentalUnitPatchRequestDto dto, @MappingTarget RentalUnit entity);
 
-    RentalUnitAdminResponseDto toRentalUnitAdminResponseDto(RentalUnitResponseDto dto);
+    RentalUnitAdminResponseDto toRentalUnitAdminResponseDto(RentalUnit entity);
 
     default EPool stringToEPool(String dto) throws BadRequestException {
         if (dto.equalsIgnoreCase("PRIVATE") || dto.equalsIgnoreCase("privada"))

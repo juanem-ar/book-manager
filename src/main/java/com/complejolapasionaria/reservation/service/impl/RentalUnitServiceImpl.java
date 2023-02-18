@@ -48,6 +48,7 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     public RentalUnitResponseDto save(RentalUnitRequestDto dto, Authentication authentication) throws Exception {
 
         User user = iUserRepository.findByEmail(authentication.getName());
+
         CommerceBuilding commerce = iCommerceBuildingRepository.getReferenceById(dto.getBuildingId());
 
         if (!iCommerceBuildingRepository.existsByIdAndOwner(dto.getBuildingId(),user))
@@ -105,47 +106,27 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
 
     @Override
     public RentalUnitResponseDto updateRentalUnit(Long id, RentalUnitPatchRequestDto dto, Authentication authentication) throws Exception {
-        User user = iUserRepository.findByEmail(authentication.getName());
-
-        List<CommerceBuilding> commerceBuildingList = iCommerceBuildingRepository.findAllByOwner(user);
-
-        if(!iRentalUnitRepository.existsByIdAndBuildingIn(id,commerceBuildingList))
-            throw new ResourceNotFound("This resource doesn't belong you.");
-
-        RentalUnit entity = iRentalUnitRepository.getReferenceById(id);
-
-        if(entity.getDeleted())
-            throw new ResourceNotFound("It's resource doesn't exists.");
-
+        RentalUnit entity = ownerValidations(id,authentication);
         RentalUnit entityUpdated = iRentalUnitMapper.updateEntity(dto, entity);
-
         iRentalUnitRepository.save(entityUpdated);
-
         return iRentalUnitMapper.toRentalUnitResponseDto(entityUpdated);
     }
 
     @Override
     public String removeRentalUnit(Long id, Authentication authentication) throws Exception {
-        RentalUnit entitySelected = iRentalUnitRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Not exists rental unit with id number: "+ id));
-        if(!entitySelected.getBuilding().getOwner().getEmail().equals(authentication.getName()))
-            throw new ResourceNotFound("You don't have permission to delete this rental unit");
-        if(entitySelected.getDeleted())
-            throw new ResourceNotFound("It's resource doesn't exists.");
-        entitySelected.setDeleted(true);
-        iRentalUnitRepository.save(entitySelected);
-        return "Rental unit removed.";
+        RentalUnit entity = ownerValidations(id,authentication);
+        entity.setDeleted(true);
+        entity.setStatus(EStatus.STATUS_LOCKED);
+        iRentalUnitRepository.save(entity);
+        return "Rental unit id: " + id + " removed by admin: " + entity.getBuilding().getOwner().getFirstName() + " " + entity.getBuilding().getOwner().getLastName();
     }
 
     @Override
     public RentalUnitAdminResponseDto getRentalUnitByAdmin(Long id, Authentication authentication) throws Exception {
-        User user = iUserRepository.findByEmail(authentication.getName());
-        List<CommerceBuilding> commerceBuildingList = iCommerceBuildingRepository.findAllByOwner(user);
-        if(!iRentalUnitRepository.existsByIdAndBuildingIn(id,commerceBuildingList))
-            throw new ResourceNotFound("This resource doesn't belong you.");
-        RentalUnitResponseDto userResponse = getRentalUnitById(id);
-        RentalUnitAdminResponseDto adminResponse = iRentalUnitMapper.toRentalUnitAdminResponseDto(userResponse);
-        adminResponse.setReservationList(iReservationRepository.findAllByUnitId(id));
-        adminResponse.setBuildingName(iCommerceBuildingRepository.getReferenceById(userResponse.getBuildingId()).getName());
+        RentalUnit entity = ownerValidations(id,authentication);
+        RentalUnitAdminResponseDto adminResponse = iRentalUnitMapper.toRentalUnitAdminResponseDto(entity);
+        adminResponse.setReservationList(iReservationRepository.findAllByDeletedAndUnitId(false,id));
+        adminResponse.setBuildingName(entity.getBuilding().getName());
         return adminResponse;
     }
 

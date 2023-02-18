@@ -42,16 +42,11 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    @Secured(value = {"ROLE_USER"})
+    @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     public ResponseEntity<ReservationResponseDto> getReservationById(@PathVariable Long id, Authentication authentication)throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(iReservationService.getById(id, authentication));
     }
 
-    @GetMapping("/{id}/any")
-    @Secured(value = {"ROLE_ADMIN"})
-    public ResponseEntity<ReservationResponseDto> getReservationByIdAndAdmin(@PathVariable Long id, Authentication authentication)throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body(iReservationService.getByIdAndAdminRole(id, authentication));
-    }
     @PatchMapping("/{id}/users/{userId}")
     @Secured(value = {"ROLE_ADMIN"})
     public ResponseEntity<ReservationResponseDto> updateReservationByAdmin(@Validated @RequestBody ReservationRequestDto dto,
