@@ -49,8 +49,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests()
                 .requestMatchers(
-                        "/swagger-ui-custom.html",
-                        "/swagger-ui.html",
+                        "/swagger-ui-custom/",
+                        "/swagger-ui/",
                         "/v3/api-docs/",
                         "/h2-console").permitAll()
                 .anyRequest().permitAll()

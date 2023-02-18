@@ -17,7 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 				contact = @Contact(name = "Juan Manuel López", email = "juanem@hotmail.com"),
 				license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0"),
 				//termsOfService = "${tos.uri}",
-				description = "# Reservation Manager by juanem"
+				description = "## Reservation Manager by juanem"
 
 		)
 		/*,
