@@ -1,5 +1,6 @@
 package com.complejolapasionaria.reservation.security.service.impl;
 
+import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.security.service.IJwtUtils;
 import io.jsonwebtoken.Claims;
@@ -22,6 +23,12 @@ public class JwtUtilsImpl implements IJwtUtils {
 
     @Override
     public String extractUsername (String token){ return extractClaim(token, Claims::getSubject);}
+
+    @Override
+    public boolean isEnable(String token) {
+        return Boolean.parseBoolean(extractAllClaims(token).get("enable").toString());
+    }
+
     @Override
     public Date extractExpiration(String token){ return extractClaim(token, Claims::getExpiration);}
     @Override
@@ -41,8 +48,10 @@ public class JwtUtilsImpl implements IJwtUtils {
 
     @Override
     public String generateToken(UserDetails userDetails){
+        User user = userRepository.findByEmail(userDetails.getUsername());
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId",userRepository.findByEmail(userDetails.getUsername()).getId());
+        claims.put("userId",user.getId());
+        claims.put("enable", user.isEnabled());
         return createToken(claims, userDetails.getUsername());
     }
     private String createToken(Map<String, Object> claims, String subject){

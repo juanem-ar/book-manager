@@ -8,6 +8,7 @@ import java.util.Date;
 
 public interface IJwtUtils {
     String extractUsername(String token);
+    boolean isEnable(String token);
 
     Date extractExpiration(String token);
 
