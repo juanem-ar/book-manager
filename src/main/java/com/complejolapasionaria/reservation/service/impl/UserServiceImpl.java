@@ -1,9 +1,11 @@
 package com.complejolapasionaria.reservation.service.impl;
 
+import com.complejolapasionaria.reservation.dto.UserResponseDto;
+import com.complejolapasionaria.reservation.mapper.UserMapper;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.IUserRepository;
-import com.complejolapasionaria.reservation.security.service.impl.UserDetailsImpl;
 import com.complejolapasionaria.reservation.service.IUserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,9 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements IUserService {
     private final IUserRepository iUserRepository;
+    private final UserMapper iUserMapper;
 
-    public UserServiceImpl(IUserRepository iUserRepository) {
+    public UserServiceImpl(IUserRepository iUserRepository, UserMapper iUserMapper) {
         this.iUserRepository = iUserRepository;
+        this.iUserMapper = iUserMapper;
     }
 
     @Override
@@ -22,6 +26,12 @@ public class UserServiceImpl implements IUserService {
         if (userEntity == null) {
             throw new UsernameNotFoundException("username or password not found");
         }
-        return UserDetailsImpl.build(userEntity);
+        return userEntity;
+    }
+
+    @Override
+    public UserResponseDto getUserById(Authentication authentication) throws Exception {
+        User entity = iUserRepository.findByEmail(authentication.getName());
+        return iUserMapper.toUserResponseDto(entity);
     }
 }

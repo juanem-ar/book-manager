@@ -3,7 +3,7 @@ package com.complejolapasionaria.reservation.security.controller;
 import com.complejolapasionaria.reservation.dto.auth.AuthenticationRequestUserDto;
 import com.complejolapasionaria.reservation.dto.auth.AuthenticationResponseDto;
 import com.complejolapasionaria.reservation.dto.RequestUserDto;
-import com.complejolapasionaria.reservation.dto.ResponseUserDto;
+import com.complejolapasionaria.reservation.dto.AuthRegisterResponseDto;
 import com.complejolapasionaria.reservation.security.service.IAuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class UserAuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ResponseUserDto> signUp(@Valid @RequestBody RequestUserDto dto) throws Exception {
+    public ResponseEntity<AuthRegisterResponseDto> signUp(@Valid @RequestBody RequestUserDto dto) throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(iAuthenticationService.saveUser(dto));
     }
 

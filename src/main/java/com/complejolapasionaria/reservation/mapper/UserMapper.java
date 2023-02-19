@@ -2,18 +2,21 @@ package com.complejolapasionaria.reservation.mapper;
 
 import com.complejolapasionaria.reservation.Enum.ERoles;
 import com.complejolapasionaria.reservation.dto.RequestUserDto;
-import com.complejolapasionaria.reservation.dto.ResponseUserDto;
+import com.complejolapasionaria.reservation.dto.AuthRegisterResponseDto;
+import com.complejolapasionaria.reservation.dto.UserResponseDto;
 import com.complejolapasionaria.reservation.model.Role;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.IRoleRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-    @Autowired
-    private IRoleRepository iRoleRepository;
+    private final IRoleRepository iRoleRepository;
+
+    public UserMapper(IRoleRepository iRoleRepository) {
+        this.iRoleRepository = iRoleRepository;
+    }
 
     public User toEntity(RequestUserDto dto) {
         User userEntity = new User();
@@ -27,11 +30,14 @@ public class UserMapper {
         userEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
         userEntity.setRole(this.convertRole(dto.getRole()));
         userEntity.setDeleted(false);
+        userEntity.setAccountNonExpired(Boolean.TRUE);
+        userEntity.setAccountNonLocked(Boolean.TRUE);
+        userEntity.setCredentialsNonExpired(Boolean.TRUE);
         return userEntity;
     }
 
-    public ResponseUserDto toResponseUserDto(User entity){
-        ResponseUserDto dto = new ResponseUserDto();
+    public UserResponseDto toUserResponseDto(User entity) {
+        UserResponseDto dto = new UserResponseDto();
         dto.setId(entity.getId());
         dto.setDeleted(entity.getDeleted());
         dto.setFirstName(entity.getFirstName());
@@ -42,8 +48,11 @@ public class UserMapper {
         dto.setPhoneNumber(entity.getPhoneNumber());
         dto.setCreationDate(entity.getCreationDate());
         dto.setUpdateDate(entity.getUpdateDate());
-        dto.setRole(entity.getRole());
         dto.setReservationList(entity.getReservationList());
+        dto.setAuthorities(entity.getAuthorities());
+        dto.setAccountNonExpired(entity.isAccountNonExpired());
+        dto.setAccountNonLocked(entity.isAccountNonLocked());
+        dto.setCredentialsNonExpired(entity.isCredentialsNonExpired());
         return dto;
     }
 

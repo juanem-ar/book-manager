@@ -1,15 +1,15 @@
 package com.complejolapasionaria.reservation.dto;
 
 import com.complejolapasionaria.reservation.model.Reservation;
-import com.complejolapasionaria.reservation.model.Role;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Data
-public class ResponseUserDto {
-
+public class UserResponseDto {
     private Long id;
     private Boolean deleted;
     private String firstName;
@@ -20,8 +20,9 @@ public class ResponseUserDto {
     private String phoneNumber;
     private Timestamp creationDate;
     private Timestamp updateDate;
-    private Role role;
     private List<Reservation> reservationList;
-    private String jwt;
-
+    private Collection<? extends GrantedAuthority> authorities;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
 }

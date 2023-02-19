@@ -1,9 +1,10 @@
 package com.complejolapasionaria.reservation.security.service.impl;
 
+import com.complejolapasionaria.reservation.dto.UserResponseDto;
 import com.complejolapasionaria.reservation.dto.auth.AuthenticationRequestUserDto;
 import com.complejolapasionaria.reservation.dto.auth.AuthenticationResponseDto;
 import com.complejolapasionaria.reservation.dto.RequestUserDto;
-import com.complejolapasionaria.reservation.dto.ResponseUserDto;
+import com.complejolapasionaria.reservation.dto.AuthRegisterResponseDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
 import com.complejolapasionaria.reservation.mapper.UserMapper;
 import com.complejolapasionaria.reservation.model.User;
@@ -15,6 +16,7 @@ import com.complejolapasionaria.reservation.service.IUserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthenticationServiceImpl implements IAuthenticationService {
@@ -34,12 +36,15 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     }
 
     @Override
-    public ResponseUserDto saveUser(RequestUserDto dto) throws Exception {
+    @Transactional
+    public AuthRegisterResponseDto saveUser(RequestUserDto dto) throws Exception {
         if(iUserRepository.existsByEmail(dto.getEmail()))
             throw new UsernameNotFoundException("There is an account with that email address.");
         User entity = UserMapper.toEntity(dto);
         User entitySaved = iUserRepository.save(entity);
-        ResponseUserDto response = UserMapper.toResponseUserDto(entitySaved);
+
+        AuthRegisterResponseDto response = new AuthRegisterResponseDto();
+        response.setUserResponseDto(UserMapper.toUserResponseDto(entitySaved));
         AuthenticationRequestUserDto authRequest = new AuthenticationRequestUserDto(dto.getEmail(),dto.getPassword());
         AuthenticationResponseDto authResponse = logIn(authRequest);
         response.setJwt(authResponse.getJwt());
