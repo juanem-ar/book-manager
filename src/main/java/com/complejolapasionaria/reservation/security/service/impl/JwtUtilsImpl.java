@@ -50,7 +50,6 @@ public class JwtUtilsImpl implements IJwtUtils {
     public String generateToken(UserDetails userDetails){
         User user = userRepository.findByEmail(userDetails.getUsername());
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId",user.getId());
         claims.put("enable", user.isEnabled());
         return createToken(claims, userDetails.getUsername());
     }
@@ -66,10 +65,5 @@ public class JwtUtilsImpl implements IJwtUtils {
     public Boolean validateToken(String token, UserDetails userDetails){
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
-
-    @Override
-    public Long extractUserId(String token) {
-        return Long.valueOf(extractAllClaims(token).get("userId").toString());
     }
 }

@@ -19,6 +19,4 @@ public interface IJwtUtils {
     String generateToken(UserDetails userDetails);
 
     Boolean validateToken(String token, UserDetails userDetails);
-
-    Long extractUserId(String token);
 }

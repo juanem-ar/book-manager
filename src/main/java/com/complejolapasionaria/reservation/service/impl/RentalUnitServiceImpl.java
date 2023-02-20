@@ -1,16 +1,14 @@
 package com.complejolapasionaria.reservation.service.impl;
 
 import com.complejolapasionaria.reservation.Enum.EStatus;
-import com.complejolapasionaria.reservation.dto.RentalUnitAdminResponseDto;
-import com.complejolapasionaria.reservation.dto.RentalUnitPatchRequestDto;
-import com.complejolapasionaria.reservation.dto.RentalUnitRequestDto;
-import com.complejolapasionaria.reservation.dto.RentalUnitResponseDto;
+import com.complejolapasionaria.reservation.dto.*;
 import com.complejolapasionaria.reservation.dto.page.RentalUnitPageDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
 import com.complejolapasionaria.reservation.exceptions.ResourceNotFound;
 import com.complejolapasionaria.reservation.mapper.IRentalUnitMapper;
 import com.complejolapasionaria.reservation.model.CommerceBuilding;
 import com.complejolapasionaria.reservation.model.RentalUnit;
+import com.complejolapasionaria.reservation.model.Reservation;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.ICommerceBuildingRepository;
 import com.complejolapasionaria.reservation.repository.IRentalUnitRepository;
@@ -24,6 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,13 +35,15 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     private final ICommerceBuildingRepository iCommerceBuildingRepository;
     private final IUserRepository iUserRepository;
     private final IReservationRepository iReservationRepository;
+    private final ReservationServiceImpl iReservationService;
 
-    public RentalUnitServiceImpl(IRentalUnitRepository iRentalUnitRepository, IRentalUnitMapper iRentalUnitMapper, ICommerceBuildingRepository iCommerceBuildingRepository, IUserRepository iUserRepository, IReservationRepository iReservationRepository) {
+    public RentalUnitServiceImpl(IRentalUnitRepository iRentalUnitRepository, IRentalUnitMapper iRentalUnitMapper, ICommerceBuildingRepository iCommerceBuildingRepository, IUserRepository iUserRepository, IReservationRepository iReservationRepository, ReservationServiceImpl iReservationService) {
         this.iRentalUnitRepository = iRentalUnitRepository;
         this.iRentalUnitMapper = iRentalUnitMapper;
         this.iCommerceBuildingRepository = iCommerceBuildingRepository;
         this.iUserRepository = iUserRepository;
         this.iReservationRepository = iReservationRepository;
+        this.iReservationService = iReservationService;
     }
 
     @Override
@@ -125,7 +127,15 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     public RentalUnitAdminResponseDto getRentalUnitByAdmin(Long id, Authentication authentication) throws Exception {
         RentalUnit entity = ownerValidations(id,authentication);
         RentalUnitAdminResponseDto adminResponse = iRentalUnitMapper.toRentalUnitAdminResponseDto(entity);
-        adminResponse.setReservationList(iReservationRepository.findAllByDeletedAndUnitId(false,id));
+
+        List<Reservation> reservationList = iReservationRepository.findAllByDeletedAndUnitId(false,id);
+        List<ReservationResponseDto> reservationResponseList = new ArrayList<>();
+
+        for (Reservation re : reservationList){
+            reservationResponseList.add(iReservationService.getReservation(re));
+        }
+        adminResponse.setReservationList(reservationResponseList);
+        
         adminResponse.setBuildingName(entity.getBuilding().getName());
         return adminResponse;
     }
