@@ -1,5 +1,6 @@
 package com.complejolapasionaria.reservation.service;
 
+import com.complejolapasionaria.reservation.dto.RequestPatchUserDto;
 import com.complejolapasionaria.reservation.dto.UserResponseDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,4 +10,7 @@ public interface IUserService extends UserDetailsService {
     UserDetails loadUserByUsername(String email);
     UserResponseDto getUserById(Authentication authentication);
     String removeUserByAuth(Authentication authentication);
+
+    UserResponseDto updateUser(RequestPatchUserDto dto, Authentication authentication);
+
 }
