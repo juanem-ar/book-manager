@@ -21,7 +21,7 @@ public class UserController {
         this.iUserService = iUserService;
     }
 
-    @GetMapping
+    @GetMapping("/")
     @Secured(value = {"ROLE_USER","ROLE_ADMIN"})
     public ResponseEntity<UserResponseDto> getUserInfo(Authentication authentication) {
         return ResponseEntity.status(HttpStatus.OK).body(iUserService.getUserById(authentication));

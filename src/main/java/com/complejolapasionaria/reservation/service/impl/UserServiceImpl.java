@@ -31,7 +31,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserResponseDto getUserById(Authentication authentication){
-        User entity = iUserRepository.findByEmail(authentication.getName());
+        User entity = (User) loadUserByUsername(authentication.getName());
         return iUserMapper.toUserResponseDto(entity);
     }
 }
