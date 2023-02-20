@@ -8,4 +8,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface IUserService extends UserDetailsService {
     UserDetails loadUserByUsername(String email);
     UserResponseDto getUserById(Authentication authentication);
+    String removeUserByAuth(Authentication authentication);
 }

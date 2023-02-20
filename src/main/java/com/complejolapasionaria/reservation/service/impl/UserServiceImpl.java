@@ -34,4 +34,15 @@ public class UserServiceImpl implements IUserService {
         User entity = (User) loadUserByUsername(authentication.getName());
         return iUserMapper.toUserResponseDto(entity);
     }
+
+    @Override
+    public String removeUserByAuth(Authentication authentication) {
+        User entity = (User) loadUserByUsername(authentication.getName());
+        entity.setCredentialsNonExpired(Boolean.FALSE);
+        entity.setAccountNonLocked(Boolean.FALSE);
+        entity.setAccountNonExpired(Boolean.FALSE);
+        entity.setDeleted(Boolean.TRUE);
+        iUserRepository.save(entity);
+        return "/auth/login";
+    }
 }
