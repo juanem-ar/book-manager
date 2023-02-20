@@ -1,12 +1,9 @@
 package com.complejolapasionaria.reservation.model;
 
 import com.complejolapasionaria.reservation.Enum.ERoles;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,7 +12,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "roles")
@@ -40,12 +38,10 @@ public class Role implements Serializable {
 
     @CreationTimestamp
     @Column(name = "creation_date")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Timestamp creationDate;
 
     @UpdateTimestamp
     @Column(name = "update_date")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Timestamp updateDate;
 
     private Boolean deleted;

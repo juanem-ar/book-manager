@@ -30,7 +30,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserResponseDto getUserById(Authentication authentication) throws Exception {
+    public UserResponseDto getUserById(Authentication authentication){
         User entity = iUserRepository.findByEmail(authentication.getName());
         return iUserMapper.toUserResponseDto(entity);
     }

@@ -2,7 +2,6 @@ package com.complejolapasionaria.reservation.mapper;
 
 import com.complejolapasionaria.reservation.Enum.ERoles;
 import com.complejolapasionaria.reservation.dto.RequestUserDto;
-import com.complejolapasionaria.reservation.dto.AuthRegisterResponseDto;
 import com.complejolapasionaria.reservation.dto.UserResponseDto;
 import com.complejolapasionaria.reservation.model.Role;
 import com.complejolapasionaria.reservation.model.User;

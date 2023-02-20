@@ -27,10 +27,9 @@ public class Reservation  implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
     private Boolean deleted = Boolean.FALSE;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false )
     @JoinColumn(name = "user_id", updatable = false)
     @JsonIgnore
     private User user;
@@ -41,11 +40,9 @@ public class Reservation  implements Serializable {
     private RentalUnit unit;
 
     @CreationTimestamp
-    @JsonIgnore
     private LocalDateTime creationDate;
 
     @UpdateTimestamp
-    @JsonIgnore
     private LocalDateTime updateDate;
 
     @NotNull(message = "Amount of people is required")

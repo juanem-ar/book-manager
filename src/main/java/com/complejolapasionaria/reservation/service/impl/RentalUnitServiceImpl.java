@@ -135,7 +135,7 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
             reservationResponseList.add(iReservationService.getReservation(re));
         }
         adminResponse.setReservationList(reservationResponseList);
-        
+
         adminResponse.setBuildingName(entity.getBuilding().getName());
         return adminResponse;
     }
