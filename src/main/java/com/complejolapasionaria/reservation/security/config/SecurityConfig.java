@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -47,15 +48,18 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         logger.debug("SecurityConfig initialized.");
         http
-                .authorizeHttpRequests()
-                .requestMatchers(
-                        "/swagger-ui-custom/",
-                        "/swagger-ui/",
-                        "/v3/api-docs/",
-                        "/h2-console").permitAll()
-                .anyRequest().permitAll()
-                .and().httpBasic()
-                .and().formLogin()
+                .authorizeHttpRequests(
+                        (auth)-> auth.requestMatchers(HttpMethod.GET,
+                                        "/swagger-ui-custom/",
+                                        "/api/swagger-ui/**",
+                                        "/api/docs/**",
+                                        "/api/docs-ui",
+                                        "/v3/api-docs/",
+                                        "/h2-console")
+                                .permitAll().anyRequest().authenticated()
+                )
+                .csrf().disable()
+                .formLogin()
                 .and().logout()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
