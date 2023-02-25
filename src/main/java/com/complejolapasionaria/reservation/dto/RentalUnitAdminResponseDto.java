@@ -5,8 +5,6 @@ import com.complejolapasionaria.reservation.Enum.EStatus;
 import com.complejolapasionaria.reservation.dto.page.ReservationPageDto;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class RentalUnitAdminResponseDto {
     private String buildingName;
