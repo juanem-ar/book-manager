@@ -32,7 +32,6 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     private final IRentalUnitMapper iRentalUnitMapper;
     private final ICommerceBuildingRepository iCommerceBuildingRepository;
     private final IUserRepository iUserRepository;
-    private final IReservationRepository iReservationRepository;
     private final ReservationServiceImpl iReservationService;
 
     public RentalUnitServiceImpl(IRentalUnitRepository iRentalUnitRepository, IRentalUnitMapper iRentalUnitMapper, ICommerceBuildingRepository iCommerceBuildingRepository, IUserRepository iUserRepository, IReservationRepository iReservationRepository, ReservationServiceImpl iReservationService) {
@@ -40,7 +39,6 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
         this.iRentalUnitMapper = iRentalUnitMapper;
         this.iCommerceBuildingRepository = iCommerceBuildingRepository;
         this.iUserRepository = iUserRepository;
-        this.iReservationRepository = iReservationRepository;
         this.iReservationService = iReservationService;
     }
 
