@@ -14,7 +14,7 @@ public interface IRentalUnitService {
     RentalUnitPageDto getAllRentalUnit(int page, HttpServletRequest request) throws Exception;
     RentalUnitResponseDto updateRentalUnit(Long id, RentalUnitPatchRequestDto dto, Authentication authentication) throws Exception;
     String removeRentalUnit(Long id,Authentication authentication) throws Exception;
-    RentalUnitAdminResponseDto getRentalUnitByAdmin(Long id,Authentication authentication) throws Exception;
+    RentalUnitAdminResponseDto getRentalUnitByAdmin(int page, Long id,Authentication authentication, HttpServletRequest httpServletRequest) throws Exception;
     String lockRentalUnit(Long id, Authentication authentication) throws Exception;
     String enableRentalUnit(Long id, Authentication authentication) throws Exception;
 }

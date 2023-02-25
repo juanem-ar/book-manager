@@ -4,6 +4,7 @@ import com.complejolapasionaria.reservation.Enum.ERoles;
 import com.complejolapasionaria.reservation.Enum.EStatus;
 import com.complejolapasionaria.reservation.dto.ReservationRequestDto;
 import com.complejolapasionaria.reservation.dto.ReservationResponseDto;
+import com.complejolapasionaria.reservation.dto.page.ReservationPageDto;
 import com.complejolapasionaria.reservation.exceptions.BadRequestException;
 import com.complejolapasionaria.reservation.exceptions.ResourceNotFound;
 import com.complejolapasionaria.reservation.mapper.IReservationMapper;
@@ -14,10 +15,16 @@ import com.complejolapasionaria.reservation.repository.IRentalUnitRepository;
 import com.complejolapasionaria.reservation.repository.IReservationRepository;
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.service.IReservationService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.ArrayList;
+import java.util.List;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
@@ -155,7 +162,7 @@ public class ReservationServiceImpl implements IReservationService {
         if (entity.getDeleted())
             throw new ResourceNotFound("This resource doesn't exists.");
         return entity;
-}
+    }
     public ReservationResponseDto getReservation(Reservation entity)throws Exception{
         ReservationResponseDto response = iReservationMapper.toResponseDto(entity);
         return setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(response,entity);
@@ -166,6 +173,38 @@ public class ReservationServiceImpl implements IReservationService {
         dto.setUnitName(entity.getUnit().getName());
         dto.setPhone(entity.getUser().getPhoneNumber());
         return dto;
+    }
+
+    public ReservationPageDto getAllReservationsByRentalUnitId(int page, HttpServletRequest httpServletRequest, Long rentalUnitId, int reservationsUnits) throws Exception {
+        if (page <= 0)
+            throw new ResourceNotFound("You request page not found, try page 1");
+
+        Pageable pageWithUndefinedElementsAndSortedByCheckInAsc = PageRequest.of(page-1,reservationsUnits,
+                Sort.by("checkIn")
+                        .ascending());
+
+        Page<Reservation> list = iReservationRepository.findAllByDeletedAndUnitId(false,rentalUnitId, pageWithUndefinedElementsAndSortedByCheckInAsc);
+
+        //Pagination DTO
+        ReservationPageDto pagination = new ReservationPageDto();
+        int totalPages = list.getTotalPages();
+        pagination.setTotalPages(totalPages);
+
+        if (page > totalPages)
+            throw new ResourceNotFound("The page your request not found, try page 1 or go to previous page");
+
+        String url = httpServletRequest
+                .getRequestURL().toString() + "?" + "page=";
+
+        pagination.setNextPage(totalPages == page ? null : url + String.valueOf(page + 1));
+        pagination.setPreviousPage(page == 1 ? null : url + String.valueOf(page - 1));
+
+        List<ReservationResponseDto> responseList = new ArrayList<>();
+        for (Reservation re : list.getContent()){
+            responseList.add(getReservation(re));
+        }
+        pagination.setReservationDtoList(responseList);
+        return pagination;
     }
 
     public void reservationSettings(Reservation entity, User user, Long id){

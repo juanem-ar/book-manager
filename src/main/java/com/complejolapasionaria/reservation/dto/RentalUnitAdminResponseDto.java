@@ -2,6 +2,7 @@ package com.complejolapasionaria.reservation.dto;
 
 import com.complejolapasionaria.reservation.Enum.EPool;
 import com.complejolapasionaria.reservation.Enum.EStatus;
+import com.complejolapasionaria.reservation.dto.page.ReservationPageDto;
 import lombok.Data;
 
 import java.util.List;
@@ -16,5 +17,6 @@ public class RentalUnitAdminResponseDto {
     private int numberOfRooms;
     private EStatus status;
     private EPool pool;
-    private List<ReservationResponseDto> reservationList;
+    //private List<ReservationResponseDto> reservationList;
+    private ReservationPageDto reservationPageDto;
 }
