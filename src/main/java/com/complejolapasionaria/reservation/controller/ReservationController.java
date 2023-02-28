@@ -4,6 +4,7 @@ import com.complejolapasionaria.reservation.dto.ReservationRequestDto;
 import com.complejolapasionaria.reservation.dto.ReservationResponseDto;
 import com.complejolapasionaria.reservation.service.IReservationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -14,13 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/reservations")
 @SecurityRequirement(name="Bearer Authentication")
+@RequiredArgsConstructor
 public class ReservationController {
 
     private final IReservationService iReservationService;
-
-    public ReservationController(IReservationService iReservationService) {
-        this.iReservationService = iReservationService;
-    }
 
     @PostMapping("/create/rental-units/{id}")
     @Secured(value = {"ROLE_USER"})

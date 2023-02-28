@@ -6,6 +6,7 @@ import com.complejolapasionaria.reservation.dto.page.CommerceBuildingPageDto;
 import com.complejolapasionaria.reservation.service.ICommerceBuildingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -16,13 +17,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/commerce-buildings")
 @SecurityRequirement(name="Bearer Authentication")
+@RequiredArgsConstructor
 public class CommerceBuildingController {
 
     private final ICommerceBuildingService iCommerceBuildingService;
-
-    public CommerceBuildingController(ICommerceBuildingService iCommerceBuildingService) {
-        this.iCommerceBuildingService = iCommerceBuildingService;
-    }
 
     @PostMapping("/save")
     @Secured(value = {"ROLE_ADMIN"})

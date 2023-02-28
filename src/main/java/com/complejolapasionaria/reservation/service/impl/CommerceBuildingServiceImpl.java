@@ -12,6 +12,7 @@ import com.complejolapasionaria.reservation.repository.ICommerceBuildingReposito
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.service.ICommerceBuildingService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,17 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
     public static final Integer COMMERCE_BUILDINGS_FOR_PAGE = 3;
     private final ICommerceBuildingRepository iCommerceBuildingRepository;
     private final ICommerceBuildingMapper iCommerceBuildingMapper;
     private final IUserRepository iUserRepository;
-
-    public CommerceBuildingServiceImpl(ICommerceBuildingRepository iCommerceBuildingRepository, ICommerceBuildingMapper iCommerceBuildingMapper, IUserRepository iUserRepository) {
-        this.iCommerceBuildingRepository = iCommerceBuildingRepository;
-        this.iCommerceBuildingMapper = iCommerceBuildingMapper;
-        this.iUserRepository = iUserRepository;
-    }
 
     @Override
     public CommerceBuildingResponseDto save(CommerceBuildingRequestDto dto, Authentication authentication) throws Exception {

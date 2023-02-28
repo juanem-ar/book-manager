@@ -7,13 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
 import java.security.InvalidParameterException;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
@@ -28,6 +29,24 @@ public class GlobalExceptions {
         errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
         errorsResponseMessage.setMessage(Arrays.toString(ex.getDetailMessageArguments()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
+
+    @ExceptionHandler({BadCredentialsException.class})
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponsesMessages> processValidationError(BadCredentialsException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.BAD_REQUEST);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsResponseMessage);
+    }
+
+    @ExceptionHandler({CredentialsExpiredException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponsesMessages> processValidationError(CredentialsExpiredException ex){
+        ErrorResponsesMessages errorsResponseMessage = new ErrorResponsesMessages();
+        errorsResponseMessage.setHttpStatus(HttpStatus.NOT_FOUND);
+        errorsResponseMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorsResponseMessage);
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})

@@ -1,49 +1,30 @@
 package com.complejolapasionaria.reservation.security.config;
 
 import com.complejolapasionaria.reservation.security.filter.JwtRequestFilter;
-import com.complejolapasionaria.reservation.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
-    private final UserServiceImpl userService;
     private final JwtRequestFilter jwtRequestFilter;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    public SecurityConfig(UserServiceImpl userService, JwtRequestFilter jwtRequestFilter, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userService = userService;
-        this.jwtRequestFilter = jwtRequestFilter;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http ) throws Exception {
-        logger.debug("AuthenticationManager initialized.");
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userService)
-                .passwordEncoder(bCryptPasswordEncoder)
-                .and()
-                .build();
-    }
-
+    private final LogoutHandler logoutHandler;
+    private final AuthenticationProvider authenticationProvider;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         logger.debug("SecurityConfig initialized.");
@@ -55,13 +36,20 @@ public class SecurityConfig {
                                         "/api/docs/**",
                                         "/api/docs-ui",
                                         "/v3/api-docs/",
-                                        "/h2-console")
-                                .permitAll().anyRequest().authenticated()
+                                        "/h2-console").permitAll()
+                                .requestMatchers(HttpMethod.POST,
+                                        "/auth/login",
+                                        "/auth/register").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .csrf().disable()
                 .formLogin()
-                .and().logout()
-                .and().csrf().disable()
+                .and().authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout().logoutUrl("/auth/logout").addLogoutHandler(logoutHandler).logoutSuccessHandler(
+                        (request, response, authentication) -> SecurityContextHolder.clearContext()
+                )
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().exceptionHandling().authenticationEntryPoint(
                         (request, response, ex) -> {
@@ -73,12 +61,6 @@ public class SecurityConfig {
                 );
         //h2 config
         http.headers().frameOptions().sameOrigin();
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-    }
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        logger.debug("WebSecurityCustomizer initialized.");
-        return (web) -> web.ignoring().requestMatchers("/resources/**","/js/**","/css/**","/css/images/**");
     }
 }

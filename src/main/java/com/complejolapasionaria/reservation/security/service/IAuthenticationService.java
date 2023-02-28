@@ -7,5 +7,5 @@ import com.complejolapasionaria.reservation.dto.AuthRegisterResponseDto;
 
 public interface IAuthenticationService {
     AuthRegisterResponseDto saveUser(RequestUserDto dto) throws  Exception;
-    AuthenticationResponseDto logIn(AuthenticationRequestUserDto dto) throws  Exception;
+    AuthenticationResponseDto authenticate(AuthenticationRequestUserDto dto) throws  Exception;
 }

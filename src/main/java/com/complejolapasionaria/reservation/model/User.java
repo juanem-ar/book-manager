@@ -79,6 +79,9 @@ public class User implements Serializable, UserDetails {
     @JoinColumn(name = "role")
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Reservation> reservationList = new ArrayList<>();
     private boolean accountNonExpired;

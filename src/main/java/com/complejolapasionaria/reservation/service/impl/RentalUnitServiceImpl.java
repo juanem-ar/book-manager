@@ -12,10 +12,10 @@ import com.complejolapasionaria.reservation.model.RentalUnit;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.ICommerceBuildingRepository;
 import com.complejolapasionaria.reservation.repository.IRentalUnitRepository;
-import com.complejolapasionaria.reservation.repository.IReservationRepository;
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.service.IRentalUnitService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RentalUnitServiceImpl implements IRentalUnitService {
     public static final Integer RESERVATIONS_FOR_PAGE = 3;
     public static final Integer RENTAL_UNITS_FOR_PAGE = 3;
@@ -33,14 +34,6 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     private final ICommerceBuildingRepository iCommerceBuildingRepository;
     private final IUserRepository iUserRepository;
     private final ReservationServiceImpl iReservationService;
-
-    public RentalUnitServiceImpl(IRentalUnitRepository iRentalUnitRepository, IRentalUnitMapper iRentalUnitMapper, ICommerceBuildingRepository iCommerceBuildingRepository, IUserRepository iUserRepository, IReservationRepository iReservationRepository, ReservationServiceImpl iReservationService) {
-        this.iRentalUnitRepository = iRentalUnitRepository;
-        this.iRentalUnitMapper = iRentalUnitMapper;
-        this.iCommerceBuildingRepository = iCommerceBuildingRepository;
-        this.iUserRepository = iUserRepository;
-        this.iReservationService = iReservationService;
-    }
 
     @Override
     public RentalUnitResponseDto save(RentalUnitRequestDto dto, Authentication authentication) throws Exception {

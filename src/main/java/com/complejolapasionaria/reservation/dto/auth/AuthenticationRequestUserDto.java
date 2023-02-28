@@ -17,7 +17,7 @@ public class AuthenticationRequestUserDto {
     @NotNull(message = "Email is required")
     @Email(message = "Email format invalid")
     @Size(min = 6)
-    @Schema(format = "email", example = "juanem@hotmail.com", minLength = 6, description = "User email")
+    @Schema(format = "email", example = "user1@user.com", minLength = 6, description = "User email")
     private String email;
 
     @NotNull(message = "Password is required")

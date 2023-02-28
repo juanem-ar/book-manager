@@ -6,26 +6,27 @@ import com.complejolapasionaria.reservation.mapper.UserMapper;
 import com.complejolapasionaria.reservation.model.User;
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.service.IUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
     private final IUserRepository iUserRepository;
     private final UserMapper iUserMapper;
-
-    public UserServiceImpl(IUserRepository iUserRepository, UserMapper iUserMapper) {
-        this.iUserRepository = iUserRepository;
-        this.iUserMapper = iUserMapper;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User userEntity = iUserRepository.findByEmail(email);
         if (userEntity == null) {
             throw new UsernameNotFoundException("username or password not found");
+        }
+        if(!userEntity.isCredentialsNonExpired()) {
+            userEntity.setCredentialsNonExpired(true);
+            iUserRepository.save(userEntity);
         }
         return userEntity;
     }

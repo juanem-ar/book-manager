@@ -8,6 +8,7 @@ import com.complejolapasionaria.reservation.dto.page.RentalUnitPageDto;
 import com.complejolapasionaria.reservation.service.IRentalUnitService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -18,13 +19,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/rental-units")
 @SecurityRequirement(name="Bearer Authentication")
+@RequiredArgsConstructor
 public class RentalUnitController {
 
     private final IRentalUnitService iRentalUnitService;
-
-    public RentalUnitController(IRentalUnitService iRentalUnitService) {
-        this.iRentalUnitService = iRentalUnitService;
-    }
 
     @PostMapping("/save")
     @Secured(value = {"ROLE_ADMIN"})

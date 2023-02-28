@@ -16,6 +16,7 @@ import com.complejolapasionaria.reservation.repository.IReservationRepository;
 import com.complejolapasionaria.reservation.repository.IUserRepository;
 import com.complejolapasionaria.reservation.service.IReservationService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,18 +29,12 @@ import java.util.List;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationServiceImpl implements IReservationService {
     private final IUserRepository iUserRepository;
     private final IRentalUnitRepository iRentalUnitRepository;
     private final IReservationRepository iReservationRepository;
     private final IReservationMapper iReservationMapper;
-
-    public ReservationServiceImpl(IUserRepository iUserRepository, IRentalUnitRepository iRentalUnitRepository, IReservationRepository iReservationRepository, IReservationMapper iReservationMapper) {
-        this.iUserRepository = iUserRepository;
-        this.iRentalUnitRepository = iRentalUnitRepository;
-        this.iReservationRepository = iReservationRepository;
-        this.iReservationMapper = iReservationMapper;
-    }
 
     @Override
     public ReservationResponseDto adminReserve(ReservationRequestDto dto,Authentication authentication, Long userId, Long rentalUnitId ) throws Exception {

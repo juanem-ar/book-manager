@@ -6,6 +6,7 @@ import com.complejolapasionaria.reservation.repository.IUserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class JwtUtilsImpl implements IJwtUtils {
     private String SECRET_KEY = "secret";
-    private IUserRepository userRepository;
-    public JwtUtilsImpl(IUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final IUserRepository userRepository;
 
     @Override
     public String extractUsername (String token){ return extractClaim(token, Claims::getSubject);}
