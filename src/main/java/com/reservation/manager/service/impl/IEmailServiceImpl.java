@@ -30,7 +30,7 @@ public class IEmailServiceImpl implements IEmailService {
     public void sendWelcomeEmailTo(String to) throws IOException {
         validateEmailSend();
         String content = "Welcome to the " + nameBusiness + "'s family.\nNow, you can create a reservation, modify and check availability of the rental units.\nGo ahead and explore!";
-        sendEmail(to,content,"You've registered successfully!");
+        sendEmail(to,content,"You've registered successfully!", false);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class IEmailServiceImpl implements IEmailService {
         validateEmailSend();
         String content = "**IMPORTANT:** To confirm this reservation you must make the partial payment.\n\nDetails:\n\n" + reservation.toString();
         String subject = "Reservation ID#" + reservation.getId() + " created - Status: IN PROCESS.";
-        sendEmail(to,content,subject);
+        sendEmail(to,content,subject,true);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class IEmailServiceImpl implements IEmailService {
         validateEmailSend();
         String content = "**RESERVATION CONFIRMED** \n\nDetails:\n\n" + reservation.toString();
         String subject = "Reservation ID#" + reservation.getId() + " CONFIRMED.";
-        sendEmail(to,content,subject);
+        sendEmail(to,content,subject,true);
     }
 
     public void validateEmailSend() throws EmailException {
@@ -55,13 +55,14 @@ public class IEmailServiceImpl implements IEmailService {
         }
     }
 
-    public void sendEmail(String to, String emailContent, String emailSubject){
+    public void sendEmail(String to, String emailContent, String emailSubject, boolean cc){
         MimeMessage message = javaMailSender.createMimeMessage();
         try{
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(emailSender);
             helper.setTo(to);
-            helper.setCc(emailSender);
+            if (cc)
+                helper.setCc(emailSender);
             helper.setSubject(emailSubject);
             helper.setText(emailContent);
             javaMailSender.send(message);
