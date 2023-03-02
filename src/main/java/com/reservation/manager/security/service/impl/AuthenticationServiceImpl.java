@@ -11,12 +11,15 @@ import com.reservation.manager.model.User;
 import com.reservation.manager.repository.ITokenRepository;
 import com.reservation.manager.security.service.IAuthenticationService;
 import com.reservation.manager.repository.IUserRepository;
+import com.reservation.manager.service.IEmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private final JwtUtilsImpl jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final ITokenRepository iTokenRepository;
+    private final IEmailService iEmailService;
 
     @Override
     @Transactional
@@ -38,9 +42,10 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         AuthenticationRequestUserDto authRequest = new AuthenticationRequestUserDto(dto.getEmail(),dto.getPassword());
         AuthenticationResponseDto authResponse = authenticate(authRequest);
         response.setJwt(authResponse.getJwt());
+        iEmailService.sendWelcomeEmailTo(authResponse.getUsername());
         return response;
     }
-    public AuthenticationResponseDto authenticate(AuthenticationRequestUserDto request){
+    public AuthenticationResponseDto authenticate(AuthenticationRequestUserDto request) throws IOException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
                 request.getPassword()

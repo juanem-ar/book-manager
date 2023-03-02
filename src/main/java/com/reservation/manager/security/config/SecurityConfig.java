@@ -40,6 +40,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST,
                                         "/auth/login",
                                         "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.PATCH,
+                                        "/confirm").hasRole("ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .csrf().disable()

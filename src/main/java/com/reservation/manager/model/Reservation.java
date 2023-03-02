@@ -88,4 +88,25 @@ public class Reservation  implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private EStatus status;
+
+    @Override
+    public String toString() {
+        return "RESERVATION ID: " + this.id + "\n" +
+                "Unit name: " + this.getUnit().getName() + "\n" +
+                "Amount of people: " + this.amountOfPeople + "\n" +
+                "Check-in: " + this.checkIn + "\n" +
+                "check-out: " + this.checkOut + "\n" + "\n"+
+
+                "USER INFORMATION: " + "\n" +
+                "Name: " + this.getUser().getFirstName() + " " + this.getUser().getLastName() + "\n" +
+                "Phone: " + this.getUser().getPhoneNumber() + "\n" + "\n" +
+
+                "COST DETAIL: " + "\n" +
+                "Cost per night: " + this.costPerNight + "\n" +
+                "Payment percent: %" + this.percent + "\n" +
+                "Total: " + this.totalAmount + "\n\n" +
+
+                "PAYED: " + this.partialPayment + "\n" +
+                "DEBIT: " + this.debit + "\n\n";
+    }
 }

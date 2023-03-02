@@ -14,6 +14,7 @@ import com.reservation.manager.model.User;
 import com.reservation.manager.repository.IRentalUnitRepository;
 import com.reservation.manager.repository.IReservationRepository;
 import com.reservation.manager.repository.IUserRepository;
+import com.reservation.manager.service.IEmailService;
 import com.reservation.manager.service.IReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,8 @@ public class ReservationServiceImpl implements IReservationService {
     private final IReservationRepository iReservationRepository;
     private final IReservationMapper iReservationMapper;
 
+    private final IEmailService iEmailService;
+
     @Override
     public ReservationResponseDto adminReserve(ReservationRequestDto dto, Authentication authentication, Long userId, Long rentalUnitId ) throws Exception {
         RentalUnit rentalUnit = iRentalUnitRepository.findById(rentalUnitId).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
@@ -48,7 +51,9 @@ public class ReservationServiceImpl implements IReservationService {
     public ReservationResponseDto userReserve(ReservationRequestDto dto,Authentication authentication, Long id) throws Exception{
         User user = iUserRepository.findByEmail(authentication.getName());
         RentalUnit rentalUnit = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
-        return reservationSave(dto,user,rentalUnit);
+        ReservationResponseDto response = reservationSave(dto,user,rentalUnit);
+        iEmailService.sendReservationCreatedEmailTo(user.getEmail(), response);
+        return response;
     }
 
     @Transactional
@@ -142,6 +147,7 @@ public class ReservationServiceImpl implements IReservationService {
         Reservation entity = ownerValidations(id,authentication);
         entity.setStatus(EStatus.STATUS_ACCEPTED);
         iReservationRepository.save(entity);
+        iEmailService.sendReservationConfirmEmailTo(entity.getUser().getEmail(),entity);
         return "Reservation id: " + id + " accepted by admin: " + entity.getUnit().getBuilding().getOwner().getFirstName() + " " + entity.getUnit().getBuilding().getOwner().getLastName();
     }
 

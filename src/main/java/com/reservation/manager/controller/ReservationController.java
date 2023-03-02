@@ -58,7 +58,7 @@ public class ReservationController {
     public ResponseEntity<String> removeReservationByAdmin(@PathVariable Long id, Authentication authentication) throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(iReservationService.removeReservation(id, authentication));
     }
-    @PostMapping("/{id}/confirm")
+    @PatchMapping("/{id}/confirm")
     @Secured(value = {"ROLE_ADMIN"})
     public ResponseEntity<String> confirmReservationByAdmin(@PathVariable Long id, Authentication authentication) throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(iReservationService.confirmReservation(id, authentication));

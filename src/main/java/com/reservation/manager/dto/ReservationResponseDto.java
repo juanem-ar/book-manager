@@ -32,23 +32,21 @@ public class ReservationResponseDto {
 
     @Override
     public String toString() {
-        return "Reservation: [" +
-                "id: " + this.id + "\n" +
-                "user: " + this.fullName + "\n" +
-                "phone: " + this.phone + "\n" +
-                "deleted: " + this.deleted + "\n" +
-                "creation date: " + this.creationDate + "\n" +
-                "update date: " + this.updateDate + "\n" +
-                "amount of people: " + this.amountOfPeople + "\n" +
-                "check-i date: " + this.checkIn + "\n" +
-                "check-out date: " + this.checkOut + "\n" +
-                "unit name: " + this.unitName + "\n" +
-                "cost per night: " + this.costPerNight + "\n" +
-                "partial payment: " + this.partialPayment + "\n" +
-                "payment percent: " + this.percent + "\n" +
-                "debit amount: " + this.debit + "\n" +
-                "total amount: " + this.totalAmount + "\n" +
-                "reservation status: " + this.status +
-                "]";
+        return "RESERVATION ID: " + this.id + "\n" +
+                "Unit name: " + this.unitName + "\n" +
+                "Amount of people: " + this.amountOfPeople + "\n" +
+                "Check-in: " + this.checkIn + "\n" +
+                "check-out: " + this.checkOut + "\n" + "\n"+
+
+                "USER INFORMATION: " + "\n" +
+                "Name: " + this.fullName + "\n" +
+                "Phone: " + this.phone + "\n" + "\n" +
+
+                "COST DETAIL: " + "\n" +
+                "Cost per night: " + this.costPerNight + "\n" +
+                "Partial payment: " + this.partialPayment + "\n" +
+                "Payment percent: %" + this.percent + "\n" +
+                "Debit: " + this.debit + "\n" +
+                "Total: " + this.totalAmount;
     }
 }
