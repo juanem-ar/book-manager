@@ -2,6 +2,8 @@ package com.reservation.manager.service;
 
 import com.reservation.manager.dto.ReservationRequestDto;
 import com.reservation.manager.dto.ReservationResponseDto;
+import com.reservation.manager.dto.page.ReservationPageDto;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 
 public interface IReservationService {
@@ -11,4 +13,5 @@ public interface IReservationService {
     ReservationResponseDto update(ReservationRequestDto dto, Long id, Long userId, Authentication authentication) throws Exception;
     String removeReservation(Long id, Authentication authentication) throws Exception;
     String confirmReservation(Long id, Authentication authentication) throws Exception;
+    ReservationPageDto getAllReservationsByRentalUnitId(int page, HttpServletRequest httpServletRequest, Long rentalUnitId, int reservationsUnits) throws Exception;
 }

@@ -1,9 +1,7 @@
 package com.reservation.manager.dto;
 
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +28,9 @@ public class RequestUserDto {
 
     @Length(min = 8)
     @NotNull(message = "Password is required")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message = "- at least 8 characters\n" +
+            "- must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number\n" +
+            "- Can contain special characters")
     private String password;
 
     @NotNull(message = "Date of birth is required (YYYY-MM-dd).")
@@ -41,6 +42,7 @@ public class RequestUserDto {
 
     @NotNull(message = "Phone number is required")
     @Column(name = "phone_number")
+    @Pattern(regexp = "(\\+54[\\d]{10})|(\\+54[\\d]{11})", message = "Format: +543515168306")
     private String phoneNumber;
 
     private String role;

@@ -16,6 +16,7 @@ import com.reservation.manager.repository.IReservationRepository;
 import com.reservation.manager.repository.IUserRepository;
 import com.reservation.manager.service.IEmailService;
 import com.reservation.manager.service.IReservationService;
+import com.reservation.manager.service.IWhatsappService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,8 +37,8 @@ public class ReservationServiceImpl implements IReservationService {
     private final IRentalUnitRepository iRentalUnitRepository;
     private final IReservationRepository iReservationRepository;
     private final IReservationMapper iReservationMapper;
-
     private final IEmailService iEmailService;
+    private final IWhatsappService iWhatsappService;
 
     @Override
     public ReservationResponseDto adminReserve(ReservationRequestDto dto, Authentication authentication, Long userId, Long rentalUnitId ) throws Exception {
@@ -53,6 +54,7 @@ public class ReservationServiceImpl implements IReservationService {
         RentalUnit rentalUnit = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
         ReservationResponseDto response = reservationSave(dto,user,rentalUnit);
         iEmailService.sendReservationCreatedEmailTo(user.getEmail(), response);
+        iWhatsappService.sendWhatsapp(response);
         return response;
     }
 

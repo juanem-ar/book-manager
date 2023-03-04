@@ -17,6 +17,7 @@ import com.reservation.manager.repository.ICommerceBuildingRepository;
 import com.reservation.manager.repository.IRentalUnitRepository;
 import com.reservation.manager.repository.IUserRepository;
 import com.reservation.manager.service.IRentalUnitService;
+import com.reservation.manager.service.IReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     private final IRentalUnitMapper iRentalUnitMapper;
     private final ICommerceBuildingRepository iCommerceBuildingRepository;
     private final IUserRepository iUserRepository;
-    private final ReservationServiceImpl iReservationService;
+    private final IReservationService iReservationService;
 
     @Override
     public RentalUnitResponseDto save(RentalUnitRequestDto dto, Authentication authentication) throws Exception {
