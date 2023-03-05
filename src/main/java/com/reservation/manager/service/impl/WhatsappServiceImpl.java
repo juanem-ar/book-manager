@@ -27,6 +27,9 @@ public class WhatsappServiceImpl implements IWhatsappService {
     @Value("${whatsapp.api.enable}")
     private boolean enable;
 
+    @Value("${whatsapp.api.templates.newReservation}")
+    private String newReservationTemplate;
+
     @Override
     public void sendWhatsapp(ReservationResponseDto reservation) throws Exception{
         isEnable(enable);
@@ -41,7 +44,7 @@ public class WhatsappServiceImpl implements IWhatsappService {
                     "\"to\": \"" + reservation.getPhone().substring(1) + "\","+
                     "\"type\": \"template\","+
                     "\"template\": {"+
-                "\"name\": \"confirmation_response\","+
+                "\"name\": \""+ newReservationTemplate +"\","+
                         "\"language\": {"+
                     "\"code\": \"es_AR\""+
                 "},"+
