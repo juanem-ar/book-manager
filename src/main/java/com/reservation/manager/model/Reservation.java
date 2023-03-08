@@ -99,7 +99,7 @@ public class Reservation  implements Serializable {
 
                 "USER INFORMATION: " + "\n" +
                 "Name: " + this.getUser().getFirstName() + " " + this.getUser().getLastName() + "\n" +
-                "Phone: " + this.getUser().getPhoneNumber() + "\n" + "\n" +
+                "Phone: " + this.getUser().getAreaCode() + this.getUser().getPhoneNumber() + "\n" + "\n" +
 
                 "COST DETAIL: " + "\n" +
                 "Cost per night: " + this.costPerNight + "\n" +

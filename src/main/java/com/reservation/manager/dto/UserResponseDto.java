@@ -17,6 +17,9 @@ public class UserResponseDto {
     private String email;
     private LocalDate dateOfBirth;
     private String address;
+    private String documentType;
+    private String documentNumber;
+    private String areaCode;
     private String phoneNumber;
     private Timestamp creationDate;
     private Timestamp updateDate;

@@ -1,5 +1,6 @@
 package com.reservation.manager.mapper;
 
+import com.reservation.manager.Enum.EDocumentTypes;
 import com.reservation.manager.Enum.ERoles;
 import com.reservation.manager.dto.RequestUserDto;
 import com.reservation.manager.dto.UserResponseDto;
@@ -24,7 +25,10 @@ public class UserMapper {
         userEntity.setEmail(dto.getEmail());
         userEntity.setDateOfBirth(dto.getDateOfBirth());
         userEntity.setAddress(dto.getAddress());
+        userEntity.setAreaCode(dto.getAreaCode());
         userEntity.setPhoneNumber(dto.getPhoneNumber());
+        userEntity.setDocumentType(convertToDocumentType(dto.getDocumentType()));
+        userEntity.setDocumentNumber(dto.getDocumentNumber());
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         userEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
         userEntity.setRole(this.convertRole(dto.getRole()));
@@ -44,7 +48,10 @@ public class UserMapper {
         dto.setEmail(entity.getEmail());
         dto.setDateOfBirth(entity.getDateOfBirth());
         dto.setAddress(entity.getAddress());
+        dto.setAreaCode(entity.getAreaCode());
         dto.setPhoneNumber(entity.getPhoneNumber());
+        dto.setDocumentType(String.valueOf(entity.getDocumentType()));
+        dto.setDocumentNumber(entity.getDocumentNumber());
         dto.setCreationDate(entity.getCreationDate());
         dto.setUpdateDate(entity.getUpdateDate());
         dto.setReservationList(entity.getReservationList());
@@ -58,5 +65,8 @@ public class UserMapper {
     public Role convertRole (String name){
         return name.equalsIgnoreCase("ADMIN") ?
                 iRoleRepository.findByName(ERoles.ROLE_ADMIN) : iRoleRepository.findByName(ERoles.ROLE_USER);
+    }
+    public EDocumentTypes convertToDocumentType(String type){
+        return type.equalsIgnoreCase("DNI")?EDocumentTypes.DNI:type.equalsIgnoreCase("CI")?EDocumentTypes.CI:type.equalsIgnoreCase("LC")?EDocumentTypes.LC:type.equalsIgnoreCase("LE")?EDocumentTypes.LE:EDocumentTypes.OTRO;
     }
 }

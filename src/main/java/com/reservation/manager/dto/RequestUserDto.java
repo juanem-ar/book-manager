@@ -28,9 +28,8 @@ public class RequestUserDto {
 
     @Length(min = 8)
     @NotNull(message = "Password is required")
-    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$", message = "- at least 8 characters\n" +
-            "- must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number\n" +
-            "- Can contain special characters")
+    @Pattern(regexp = "((?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{8,20})", message = "- at least 8 characters, " +
+            "also must contain at least 1 number, 1 uppercase and 1 lowercase letter")
     private String password;
 
     @NotNull(message = "Date of birth is required (YYYY-MM-dd).")
@@ -40,9 +39,20 @@ public class RequestUserDto {
     @NotNull(message = "Address is required")
     private String address;
 
+    @NotNull(message = "Document type is required")
+    @Pattern(regexp = "(^(?=.*[A-Z])|^(?=.*[a-z])).{2,4}$", message = "Choose between \"DNI\",\"CI\",\"LC\",\"LE\",\"OTRO\"")
+    private String documentType;
+
+    @NotNull(message = "Document number is required")
+    @Pattern(regexp = "\\d{7,8}$", message = "Invalid number")
+    private String documentNumber;
+
+    @NotNull(message = "Area code is required")
+    @Pattern(regexp = "^[+][1-9]{2,3}$", message = "Format: (+) + Area code + phone number. Without spaces and special characters")
+    private String areaCode;
+
     @NotNull(message = "Phone number is required")
-    @Column(name = "phone_number")
-    @Pattern(regexp = "(\\+54[\\d]{10})|(\\+54[\\d]{11})", message = "Format: +543515168306")
+    @Pattern(regexp = "(^[1-9]\\d{8,9})$", message = "Format: Phone number without spaces ")
     private String phoneNumber;
 
     private String role;

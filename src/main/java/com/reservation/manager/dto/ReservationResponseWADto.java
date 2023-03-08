@@ -1,18 +1,16 @@
 package com.reservation.manager.dto;
 
-import com.mercadopago.resources.preference.Preference;
 import com.reservation.manager.Enum.EStatus;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Getter
 @Setter
-public class ReservationResponseDto {
+public class ReservationResponseWADto {
     private Long id;
     private String unitName;
-    private String ownerPhoneNumber;
     private String fullName;
     private String phone;
     private Boolean deleted;
@@ -29,13 +27,11 @@ public class ReservationResponseDto {
     private Double totalAmount;
 
     private EStatus status;
-    private Preference preference;
 
     @Override
     public String toString() {
         return "RESERVATION ID: " + this.id + "\n" +
                 "Unit name: " + this.unitName + "\n" +
-                "Owner Phone Number: " + this.ownerPhoneNumber + "\n" +
                 "Amount of people: " + this.amountOfPeople + "\n" +
                 "Check-in: " + this.checkIn + "\n" +
                 "check-out: " + this.checkOut + "\n" + "\n"+
@@ -49,8 +45,7 @@ public class ReservationResponseDto {
                 "Partial payment: " + this.partialPayment + "\n" +
                 "Payment percent: %" + this.percent + "\n" +
                 "Debit: " + this.debit + "\n" +
-                "Total: " + this.totalAmount + "\n" +
-                "Preference: " + this.preference;
+                "Total: " + this.totalAmount;
 
     }
 }

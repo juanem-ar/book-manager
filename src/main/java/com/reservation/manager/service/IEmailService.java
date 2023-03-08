@@ -8,5 +8,5 @@ import java.io.IOException;
 public interface IEmailService {
     void sendWelcomeEmailTo(String to) throws IOException;
     void sendReservationCreatedEmailTo(String to, ReservationResponseDto reservation) throws IOException;
-    void sendReservationConfirmEmailTo(String to, Reservation reservation) throws IOException;
+    void sendReservationConfirmEmailTo(String to, Reservation reservation, String paymentMethod) throws IOException;
 }

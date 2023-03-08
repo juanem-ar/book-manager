@@ -42,6 +42,8 @@ public class SecurityConfig {
                                         "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.PATCH,
                                         "/confirm").hasRole("ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.PATCH,
+                                        "/confirm-mp-payment/{id}").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .csrf().disable()

@@ -63,4 +63,19 @@ public class ReservationController {
     public ResponseEntity<String> confirmReservationByAdmin(@PathVariable Long id, Authentication authentication) throws Exception{
         return ResponseEntity.status(HttpStatus.OK).body(iReservationService.confirmReservation(id, authentication));
     }
+    @PatchMapping("/confirm-mp-payment/{id}")
+    public ResponseEntity<String> confirmReservationByMp(@PathVariable Long id,
+                                                         @RequestParam(required = false) String collection_id,
+                                                         @RequestParam(required = false) String collection_status,
+                                                         @RequestParam(required = false) String payment_id,
+                                                         @RequestParam(required = false) String status,
+                                                         @RequestParam(required = false) String external_reference,
+                                                         @RequestParam(required = false) String payment_type,
+                                                         @RequestParam(required = false) String merchant_order_id,
+                                                         @RequestParam(required = false) String preference_id,
+                                                         @RequestParam(required = false) String site_id,
+                                                         @RequestParam(required = false) String processing_mode,
+                                                         @RequestParam(required = false) String merchant_account_id) throws Exception{
+        return ResponseEntity.status(HttpStatus.OK).body(iReservationService.confirmReservation(id, collection_status, status));
+    }
 }

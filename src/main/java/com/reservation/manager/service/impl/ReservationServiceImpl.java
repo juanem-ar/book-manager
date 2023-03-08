@@ -26,6 +26,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -39,30 +41,41 @@ public class ReservationServiceImpl implements IReservationService {
     private final IReservationMapper iReservationMapper;
     private final IEmailService iEmailService;
     private final IWhatsappService iWhatsappService;
+    private final MpServiceImpl mpService;
 
     @Override
     public ReservationResponseDto adminReserve(ReservationRequestDto dto, Authentication authentication, Long userId, Long rentalUnitId ) throws Exception {
         RentalUnit rentalUnit = iRentalUnitRepository.findById(rentalUnitId).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
         User user = iUserRepository.findById(userId).orElseThrow(()-> new ResourceNotFound("Invalid id"));
         rolesValidations(rentalUnitId,authentication,true, true);
-        return reservationSave(dto,user,rentalUnit);
+        Reservation reservation = validateAndMapReservation(dto,rentalUnit);
+        ReservationResponseDto response = reservationSave(reservation,user);
+        iWhatsappService.sendWhatsapp(response, "Bank transfer payment", false);
+        return response;
     }
 
     @Override
     public ReservationResponseDto userReserve(ReservationRequestDto dto,Authentication authentication, Long id) throws Exception{
         User user = iUserRepository.findByEmail(authentication.getName());
         RentalUnit rentalUnit = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
-        ReservationResponseDto response = reservationSave(dto,user,rentalUnit);
+        Reservation reservation = validateAndMapReservation(dto,rentalUnit);
+
+        ReservationResponseDto response = reservationSave(reservation,user);
+
         iEmailService.sendReservationCreatedEmailTo(user.getEmail(), response);
-        iWhatsappService.sendWhatsapp(response);
+        response.setPreference(mpService.createPreference(iReservationRepository.getReferenceById(response.getId())));
+        return response;
+    }
+    public Reservation validateAndMapReservation(ReservationRequestDto dto,RentalUnit rentalUnit)throws Exception{
+        validationToReserve(dto,rentalUnit,false);
+        Reservation response = iReservationMapper.toEntity(dto);
+        response.setUnit(rentalUnit);
         return response;
     }
 
     @Transactional
-    public ReservationResponseDto reservationSave(ReservationRequestDto dto, User user, RentalUnit rentalUnit) throws Exception {
-        validationToReserve(dto,rentalUnit,false);
-        Reservation reservation = iReservationMapper.toEntity(dto);
-        reservationSettings(reservation, user, rentalUnit.getId());
+    public ReservationResponseDto reservationSave(Reservation reservation, User user) throws Exception {
+        reservationSettings(reservation, user, reservation.getUnit().getId());
         Reservation reservationReserved = iReservationRepository.save(reservation);
         ReservationResponseDto response =  iReservationMapper.toResponseDto(reservationReserved);
         return setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(response,reservation);
@@ -149,8 +162,21 @@ public class ReservationServiceImpl implements IReservationService {
         Reservation entity = ownerValidations(id,authentication);
         entity.setStatus(EStatus.STATUS_ACCEPTED);
         iReservationRepository.save(entity);
-        iEmailService.sendReservationConfirmEmailTo(entity.getUser().getEmail(),entity);
+        iEmailService.sendReservationConfirmEmailTo(entity.getUser().getEmail(),entity, "Transferencia");
         return "Reservation id: " + id + " accepted by admin: " + entity.getUnit().getBuilding().getOwner().getFirstName() + " " + entity.getUnit().getBuilding().getOwner().getLastName();
+    }
+    @Override
+    public String confirmReservation(Long id, String collection_status, String status) throws Exception {
+        if (!collection_status.equals("approved") && status.equals("approved"))
+            throw new NotFoundException("payment process error.");
+        Reservation entity = iReservationRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Invalid id"));
+        entity.setStatus(EStatus.STATUS_ACCEPTED);
+        Reservation entitySaved =iReservationRepository.save(entity);
+        ReservationResponseDto response = reservationSave(entitySaved,iUserRepository.getReferenceById(entity.getUser().getId()));
+        //Sending alerts
+        iEmailService.sendReservationConfirmEmailTo(entitySaved.getUser().getEmail(),entitySaved, "Mercado Pago payment");
+        iWhatsappService.sendWhatsapp(response, "Mercado pago payment", true);
+        return "Reservation id: " + id + " confirmed.";
     }
 
     public Reservation remove(Long id, Authentication authentication) throws Exception {
@@ -174,7 +200,8 @@ public class ReservationServiceImpl implements IReservationService {
     public ReservationResponseDto setFullNameAndUnitNameAndPhoneOfReservationResponseFromReservation(ReservationResponseDto dto, Reservation entity){
         dto.setFullName(entity.getUser().getFirstName() + " " + entity.getUser().getLastName());
         dto.setUnitName(entity.getUnit().getName());
-        dto.setPhone(entity.getUser().getPhoneNumber());
+        dto.setOwnerPhoneNumber(entity.getUnit().getBuilding().getOwner().getPhoneNumber());
+        dto.setPhone(entity.getUser().getAreaCode() + entity.getUser().getPhoneNumber());
         return dto;
     }
 

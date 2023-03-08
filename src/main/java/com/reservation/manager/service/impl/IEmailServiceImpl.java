@@ -42,9 +42,9 @@ public class IEmailServiceImpl implements IEmailService {
     }
 
     @Override
-    public void sendReservationConfirmEmailTo(String to, Reservation reservation) throws IOException {
+    public void sendReservationConfirmEmailTo(String to, Reservation reservation, String paymentMethod) throws IOException {
         validateEmailSend();
-        String content = "**RESERVATION CONFIRMED** \n\nDetails:\n\n" + reservation.toString();
+        String content = "**RESERVATION CONFIRMED** \n\nDetails:\n\n" + reservation.toString() + "\n\nPayment method: " +paymentMethod;
         String subject = "Reservation ID#" + reservation.getId() + " CONFIRMED.";
         sendEmail(to,content,subject,true);
     }

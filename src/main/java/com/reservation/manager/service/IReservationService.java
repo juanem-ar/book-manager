@@ -13,5 +13,6 @@ public interface IReservationService {
     ReservationResponseDto update(ReservationRequestDto dto, Long id, Long userId, Authentication authentication) throws Exception;
     String removeReservation(Long id, Authentication authentication) throws Exception;
     String confirmReservation(Long id, Authentication authentication) throws Exception;
+    String confirmReservation(Long id, String collection_status, String status) throws Exception;
     ReservationPageDto getAllReservationsByRentalUnitId(int page, HttpServletRequest httpServletRequest, Long rentalUnitId, int reservationsUnits) throws Exception;
 }

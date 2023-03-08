@@ -1,6 +1,7 @@
 package com.reservation.manager.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.reservation.manager.Enum.EDocumentTypes;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -61,9 +62,22 @@ public class User implements Serializable, UserDetails {
     @NotNull(message = "Address is required")
     private String address;
 
+    @NotNull(message = "Area code is required")
+    @Column(name = "area_code")
+    private String areaCode;
+
     @NotNull(message = "Phone number is required")
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @NotNull(message = "Document type is required")
+    @Column(name = "document_type")
+    @Enumerated(EnumType.STRING)
+    private EDocumentTypes documentType;
+
+    @NotNull(message = "Document number is required")
+    @Column(name = "document_number")
+    private String documentNumber;
 
     @Column(name = "creation_date",
             updatable = false)
