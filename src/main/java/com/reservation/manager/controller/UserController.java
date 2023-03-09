@@ -3,6 +3,7 @@ package com.reservation.manager.controller;
 import com.reservation.manager.dto.RequestPatchUserDto;
 import com.reservation.manager.dto.UserResponseDto;
 import com.reservation.manager.service.IUserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @Tag(name ="Users Controller", description = "Edit, Delete and Get info to user")
 @RequiredArgsConstructor
+@SecurityRequirement(name="Bearer Authentication")
 public class UserController {
     private final IUserService iUserService;
 
