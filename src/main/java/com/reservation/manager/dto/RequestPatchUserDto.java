@@ -34,6 +34,10 @@ public class RequestPatchUserDto {
     private String address;
 
     @NotNull(message = "Phone number is required")
+    @Column(name = "area_code")
+    private String areaCode;
+
+    @NotNull(message = "Phone number is required")
     @Column(name = "phone_number")
     private String phoneNumber;
 }

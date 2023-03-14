@@ -37,7 +37,7 @@ public class UserAuthController extends
         return ResponseEntity.status(HttpStatus.CREATED).body(iAuthenticationService.saveUser(dto));
     }
 
-    @Operation(method = "POST", summary = "signIn", description = "Get jwt token necessary for access",
+    @Operation(method = "POST", summary = "Application login", description = "Get jwt token necessary for access",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Account logged", content = @Content(
                                     mediaType = "application/json", schema = @Schema(implementation = AuthenticationResponseDto.class)))

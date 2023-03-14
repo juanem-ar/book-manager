@@ -54,6 +54,7 @@ public class UserServiceImpl implements IUserService {
         entity.setLastName(dto.getLastName());
         entity.setFirstName(dto.getFirstName());
         entity.setEmail(dto.getEmail());
+        entity.setAreaCode(dto.getAreaCode());
         entity.setPhoneNumber(dto.getPhoneNumber());
         entity.setDateOfBirth(dto.getDateOfBirth());
         entity.setAddress(dto.getAddress());
