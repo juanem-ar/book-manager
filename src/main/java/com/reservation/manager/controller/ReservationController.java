@@ -28,7 +28,7 @@ public class ReservationController {
 
     @Operation(method = "POST", summary = "Create reservation as user", description = "An user can create a reservation",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    @ApiResponse(responseCode = "201", description = "OK", content = @Content(
                             mediaType = "application/json", schema = @Schema(implementation = ReservationResponseDto.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(
                             schema = @Schema(hidden = true)))
@@ -45,7 +45,7 @@ public class ReservationController {
 
     @Operation(method = "POST", summary = "Create reservation as admin", description = "An admin can create a reservation",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "OK", content = @Content(
+                    @ApiResponse(responseCode = "201", description = "OK", content = @Content(
                             mediaType = "application/json", schema = @Schema(implementation = ReservationResponseDto.class))),
                     @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(
                             schema = @Schema(hidden = true)))
@@ -75,7 +75,7 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.OK).body(iReservationService.getById(id, authentication));
     }
 
-    @Operation(method = "PATCH", summary = "Edit reservation", description = "Edit reservation as admin. If the reservations doesn't belong to admin, throw errors. The admin can edit: amount of people, check in date, check out date, cost per night or percent of payment",
+    @Operation(method = "PATCH", summary = "Edit reservation", description = "Edit reservation as admin. If the reservations doesn't belong to admin, throw errors. The admin can edit: amount of people, check in date, check out date, cost per night or percent of payment. If this reservation is updated its status changes by IN_PROCESS.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = @Content(
                             mediaType = "application/json", schema = @Schema(implementation = ReservationResponseDto.class))),

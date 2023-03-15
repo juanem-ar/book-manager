@@ -19,6 +19,7 @@ import com.reservation.manager.service.IReservationService;
 import com.reservation.manager.service.IWhatsappService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +44,9 @@ public class ReservationServiceImpl implements IReservationService {
     private final IWhatsappService iWhatsappService;
     private final MpServiceImpl mpService;
 
+    @Value("${spring.mail.service.enable}")
+    private boolean enableEmailService;
+
     @Override
     public ReservationResponseDto adminReserve(ReservationRequestDto dto, Authentication authentication, Long userId, Long rentalUnitId ) throws Exception {
         RentalUnit rentalUnit = iRentalUnitRepository.findById(rentalUnitId).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
@@ -62,7 +66,8 @@ public class ReservationServiceImpl implements IReservationService {
 
         ReservationResponseDto response = reservationSave(reservation,user);
 
-        iEmailService.sendReservationCreatedEmailTo(user.getEmail(), response);
+        if (enableEmailService)
+            iEmailService.sendReservationCreatedEmailTo(user.getEmail(), response);
         response.setPreference(mpService.createPreference(iReservationRepository.getReferenceById(response.getId())));
         return response;
     }
@@ -162,7 +167,8 @@ public class ReservationServiceImpl implements IReservationService {
         Reservation entity = ownerValidations(id,authentication);
         entity.setStatus(EStatus.STATUS_ACCEPTED);
         iReservationRepository.save(entity);
-        iEmailService.sendReservationConfirmEmailTo(entity.getUser().getEmail(),entity, "Transferencia");
+        if (enableEmailService)
+            iEmailService.sendReservationConfirmEmailTo(entity.getUser().getEmail(),entity, "Transferencia");
         return "Reservation id: " + id + " accepted by admin: " + entity.getUnit().getBuilding().getOwner().getFirstName() + " " + entity.getUnit().getBuilding().getOwner().getLastName();
     }
     @Override
@@ -174,7 +180,8 @@ public class ReservationServiceImpl implements IReservationService {
         Reservation entitySaved =iReservationRepository.save(entity);
         ReservationResponseDto response = reservationSave(entitySaved,iUserRepository.getReferenceById(entity.getUser().getId()));
         //Sending alerts
-        iEmailService.sendReservationConfirmEmailTo(entitySaved.getUser().getEmail(),entitySaved, "Mercado Pago payment");
+        if (enableEmailService)
+            iEmailService.sendReservationConfirmEmailTo(entitySaved.getUser().getEmail(),entitySaved, "Mercado Pago payment");
         iWhatsappService.sendWhatsapp(response, "Mercado pago payment", true);
         return "Reservation id: " + id + " confirmed.";
     }

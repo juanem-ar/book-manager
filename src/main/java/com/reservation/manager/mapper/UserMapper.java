@@ -50,7 +50,7 @@ public class UserMapper {
         dto.setAddress(entity.getAddress());
         dto.setAreaCode(entity.getAreaCode());
         dto.setPhoneNumber(entity.getPhoneNumber());
-        dto.setDocumentType(String.valueOf(entity.getDocumentType()));
+        dto.setDocumentType(entity.getDocumentType());
         dto.setDocumentNumber(entity.getDocumentNumber());
         dto.setCreationDate(entity.getCreationDate());
         dto.setUpdateDate(entity.getUpdateDate());

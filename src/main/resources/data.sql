@@ -4,18 +4,18 @@ VALUES('1',NOW(), 'user roles', 'ROLE_USER',FALSE, NOW()),
 
 -- USERS (5)
 -- ROLE_USER (pw encrypted: 12345678)
-INSERT INTO `users` (`id`, `account_non_expired`, `account_non_locked`, `address`, `creation_date`, `credentials_non_expired`, `day_of_birth`, `deleted`, `email`, `first_name`, `last_name`, `password`, `phone_number`, `update_date`, `role`)
+INSERT INTO `users` (`id`, `account_non_expired`, `account_non_locked`, `address`, `creation_date`, `credentials_non_expired`, `day_of_birth`, `deleted`, `email`, `first_name`, `last_name`, `password`, `phone_number`, `update_date`, `role`, `area_code`, `document_number`, `document_type`)
 VALUES
-('1', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1998-01-22', FALSE, 'user1@user.com', 'user', '1', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '1'),
-('2', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1997-01-22', FALSE, 'user2@user.com', 'user', '2', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '1'),
-('3', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1996-01-22', FALSE, 'user3@user.com', 'user', '3', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '1'),
-('4', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1995-01-22', FALSE, 'user4@user.com', 'user', '4', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '1'),
-('5', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1994-01-22', FALSE, 'user5@user.com', 'user', '5', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '1'),
-('6', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1998-01-22', FALSE, 'admin1@user.com', 'admin', '1', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '2'),
-('7', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1997-01-22', FALSE, 'admin2@user.com', 'admin', '2', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '2'),
-('8', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1996-01-22', FALSE, 'admin3@user.com', 'admin', '3', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '2'),
-('9', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1995-01-22', FALSE, 'admin4@user.com', 'admin', '4', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '2'),
-('10', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1994-01-22', FALSE, 'admin5@user.com', 'admin', '5', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '123123123', NOW(), '2');
+('1', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1998-01-22', FALSE, 'user1@user.com', 'user', '1', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '1', '+54', '36124662','DNI'),
+('2', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1997-01-22', FALSE, 'user2@user.com', 'user', '2', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '1', '+351', '36124662','DNI'),
+('3', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1996-01-22', FALSE, 'user3@user.com', 'user', '3', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '1', '+351', '36124662','DNI'),
+('4', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1995-01-22', FALSE, 'user4@user.com', 'user', '4', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '1', '+351', '36124662','DNI'),
+('5', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1994-01-22', FALSE, 'user5@user.com', 'user', '5', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '1', '+351', '36124662','DNI'),
+('6', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1998-01-22', FALSE, 'admin1@user.com', 'admin', '1', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '2', '+351', '36124662','DNI'),
+('7', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1997-01-22', FALSE, 'admin2@user.com', 'admin', '2', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '2', '+351', '36124662','DNI'),
+('8', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1996-01-22', FALSE, 'admin3@user.com', 'admin', '3', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '2', '+351', '36124662','DNI'),
+('9', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1995-01-22', FALSE, 'admin4@user.com', 'admin', '4', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '2', '+351', '36124662','DNI'),
+('10', TRUE, TRUE, 'asdasd', NOW(), TRUE, '1994-01-22', FALSE, 'admin5@user.com', 'admin', '5', '$2a$10$5IVLmuIsu0T4yYCA.eFIIOPFxX8E4UJTNmIE/0qFiDA7AUL9.fnC.', '3515168300', NOW(), '2', '+351', '36124662','DNI');
 
 -- BUILDINGS
 INSERT INTO `buildings` (`id`, `address`, `deleted`, `name`, `phone_number`, `owner_id`)

@@ -45,7 +45,7 @@ public class RequestUserDto {
     @Schema(example = "Suarez de Figueroa 1867", description = "User address")
     private String address;
 
-    @NotNull(message = "Document type is required")
+    @NotNull(message = "Document type is required. Choose between \"DNI\",\"CI\",\"LC\",\"LE\",\"OTRO\"")
     @Pattern(regexp = "(^(?=.*[A-Z])|^(?=.*[a-z])).{2,4}$", message = "Choose between \"DNI\",\"CI\",\"LC\",\"LE\",\"OTRO\"")
     @Schema(example = "DNI", description = "User document type")
     private String documentType;

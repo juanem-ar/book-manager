@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @Tag(name = "Authentication", description = "Register and Login to use the app")
 @RequiredArgsConstructor
-public class UserAuthController extends
-        SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
+public class UserAuthController extends SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
     private final IAuthenticationService iAuthenticationService;
 
     @Operation(method = "POST", summary = "Application register", description = "Get all user info",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Account registered", content = @Content(
-                            mediaType = "application/json", schema = @Schema(implementation = AuthRegisterResponseDto.class)))
+                    @ApiResponse(responseCode = "201", description = "Account registered", content = @Content(
+                            mediaType = "application/json", schema = @Schema(implementation = AuthRegisterResponseDto.class)
+                    ))
             })
     @PostMapping("/register")
     public ResponseEntity<AuthRegisterResponseDto> signUp(@Valid @RequestBody RequestUserDto dto) throws Exception {

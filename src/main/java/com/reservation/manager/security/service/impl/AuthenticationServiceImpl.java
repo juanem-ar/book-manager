@@ -13,6 +13,7 @@ import com.reservation.manager.security.service.IAuthenticationService;
 import com.reservation.manager.repository.IUserRepository;
 import com.reservation.manager.service.IEmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +32,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private final ITokenRepository iTokenRepository;
     private final IEmailService iEmailService;
 
+    @Value("${spring.mail.service.enable}")
+    private boolean enableEmailService;
+
     @Override
     @Transactional
     public AuthRegisterResponseDto saveUser(RequestUserDto dto) throws Exception {
@@ -42,7 +46,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         AuthenticationRequestUserDto authRequest = new AuthenticationRequestUserDto(dto.getEmail(),dto.getPassword());
         AuthenticationResponseDto authResponse = authenticate(authRequest);
         response.setJwt(authResponse.getJwt());
-        iEmailService.sendWelcomeEmailTo(authResponse.getUsername());
+        if (enableEmailService)
+            iEmailService.sendWelcomeEmailTo(authResponse.getUsername());
         return response;
     }
     public AuthenticationResponseDto authenticate(AuthenticationRequestUserDto request) throws IOException {

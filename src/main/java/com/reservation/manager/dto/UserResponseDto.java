@@ -1,5 +1,6 @@
 package com.reservation.manager.dto;
 
+import com.reservation.manager.Enum.EDocumentTypes;
 import com.reservation.manager.model.Reservation;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +18,7 @@ public class UserResponseDto {
     private String email;
     private LocalDate dateOfBirth;
     private String address;
-    private String documentType;
+    private EDocumentTypes documentType;
     private String documentNumber;
     private String areaCode;
     private String phoneNumber;
