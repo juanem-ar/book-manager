@@ -97,14 +97,10 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
 
     @Override
     public CommerceBuildingResponseDto updateCommerceBuilding(Long id, Authentication authentication, CommerceBuildingRequestDto dto) throws Exception {
-        if(!iCommerceBuildingRepository.existsById(id))
-            throw new InvalidParameterException("Invalid commerce id");
-
-        User user = iUserRepository.findByEmail(authentication.getName());
-        CommerceBuilding entity = iCommerceBuildingRepository.getReferenceByIdAndOwner(id,user);
-        if(entity.getDeleted())
+        CommerceBuilding entitySelected = getCommerceBuildingEntity(id, authentication);
+        if(entitySelected.getDeleted())
             throw new ResourceNotFound("Resource removed.");
-        CommerceBuilding entityUpdated = iCommerceBuildingMapper.updateEntity(dto, entity);
+        CommerceBuilding entityUpdated = iCommerceBuildingMapper.updateEntity(dto, entitySelected);
         iCommerceBuildingRepository.save(entityUpdated);
         CommerceBuildingResponseDto response = iCommerceBuildingMapper.toCommerceBuildingResponseDto(entityUpdated);
         setOwnerDetails(entityUpdated,response);
@@ -113,12 +109,17 @@ public class CommerceBuildingServiceImpl implements ICommerceBuildingService {
 
     @Override
     public String removeCommerceBuilding(Long id, Authentication authentication) throws Exception {
-        CommerceBuilding entitySelected = iCommerceBuildingRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Not exists commerce building with id number: "+ id));
-        if(!entitySelected.getOwner().getEmail().equals(authentication.getName()))
-            throw new ResourceNotFound("You don't have permission to delete this commerce building");
+        CommerceBuilding entitySelected = getCommerceBuildingEntity(id, authentication);
         entitySelected.setDeleted(true);
         iCommerceBuildingRepository.save(entitySelected);
         return "Commerce Building removed.";
+    }
+
+    private CommerceBuilding getCommerceBuildingEntity(Long id, Authentication authentication) throws ResourceNotFound {
+        CommerceBuilding entitySelected = iCommerceBuildingRepository.findById(id).orElseThrow(()-> new ResourceNotFound("Not exists commerce building with id number: "+ id));
+        if(!entitySelected.getOwner().getEmail().equals(authentication.getName()))
+            throw new ResourceNotFound("You don't have permission to edit or delete this commerce building");
+        return entitySelected;
     }
 
     public void setOwnerDetails(CommerceBuilding cm, CommerceBuildingResponseDto response){

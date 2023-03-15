@@ -1,6 +1,5 @@
 package com.reservation.manager.dto;
 
-import com.reservation.manager.model.RentalUnit;
 import lombok.Data;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,6 @@ public class CommerceBuildingResponseDto {
     private String name;
     private String address;
     private String phoneNumber;
-    private List<RentalUnit> rentalUnitList;
+    private List<RentalUnitResponseDto> rentalUnitList;
     private Map<String,String> ownerDetails;
 }

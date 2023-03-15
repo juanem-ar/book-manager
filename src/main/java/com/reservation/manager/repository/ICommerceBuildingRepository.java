@@ -13,5 +13,4 @@ public interface ICommerceBuildingRepository extends JpaRepository<CommerceBuild
     boolean existsByIdAndOwner(Long id, User user);
     boolean existsById(Long id);
     Page<CommerceBuilding> findAllByDeleted(boolean deleted, Pageable page);
-    CommerceBuilding getReferenceByIdAndOwner(Long id, User user);
 }
