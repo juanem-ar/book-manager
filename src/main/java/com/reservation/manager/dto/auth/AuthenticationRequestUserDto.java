@@ -22,6 +22,6 @@ public class AuthenticationRequestUserDto {
 
     @NotNull(message = "Password is required")
     @Length(min = 8, max = 25)
-    @Schema(required = true, example = "12345678", description = "Password", minLength = 8, maxLength = 25)
+    @Schema(example = "12345678", description = "Password", minLength = 8, maxLength = 25)
     private String password;
 }
