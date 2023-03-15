@@ -1,5 +1,6 @@
 package com.reservation.manager.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,6 +14,7 @@ public class RentalUnitPatchRequestDto {
 
     @NotNull(message = "Unit description is required")
     @Size(max = 255)
+    @Schema(description = "Complete description.")
     private String description;
 
     @NotNull(message = "Maximum of guests are required")
@@ -29,5 +31,6 @@ public class RentalUnitPatchRequestDto {
 
     @NotNull(message = "Pool description is required")
     @Size(min = 6, max = 10)
+    @Schema(description = "private")
     private String pool;
 }

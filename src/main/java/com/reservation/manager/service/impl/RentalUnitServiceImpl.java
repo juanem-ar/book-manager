@@ -143,7 +143,7 @@ public class RentalUnitServiceImpl implements IRentalUnitService {
     public RentalUnit ownerValidations(Long id, Authentication authentication) throws Exception{
         RentalUnit entity = iRentalUnitRepository.findById(id).orElseThrow(()->new ResourceNotFound("Invalid rental unit id"));
         if(!entity.getBuilding().getOwner().getEmail().equals(authentication.getName()))
-            throw new ResourceNotFound("You don't have permission to lock this rental unit");
+            throw new ResourceNotFound("You don't have permissions.");
         if(entity.getDeleted())
             throw new ResourceNotFound("It's resource doesn't exists.");
         return entity;

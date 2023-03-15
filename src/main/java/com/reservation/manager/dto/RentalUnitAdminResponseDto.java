@@ -15,6 +15,5 @@ public class RentalUnitAdminResponseDto {
     private int numberOfRooms;
     private EStatus status;
     private EPool pool;
-    //private List<ReservationResponseDto> reservationList;
     private ReservationPageDto reservationPageDto;
 }
