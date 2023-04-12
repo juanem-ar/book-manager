@@ -1,2 +1,2 @@
-# reservation-manager
-A reservation manager created with spring boot.
+# book-manager
+A book manager created with spring boot.
